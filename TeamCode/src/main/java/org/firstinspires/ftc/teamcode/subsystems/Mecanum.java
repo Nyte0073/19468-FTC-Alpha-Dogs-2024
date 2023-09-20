@@ -25,10 +25,10 @@ public class Mecanum {
         backLeft2 = motorConfig(backLeft2);
         backRight3 = motorConfig(backRight3);
 
-        frontLeft0.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight1.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft2.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight3.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft0.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight1.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft2.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight3.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     public void teleop(Gamepad gamepad1) {
@@ -42,8 +42,8 @@ public class Mecanum {
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx) / denominator;
         double backLeftPower = (y - x + rx) / denominator;
-        double frontRightPower = (y - x - rx) / denominator;
-        double backRightPower = (y + x - rx) / denominator;
+        double frontRightPower = (y + x - rx) / denominator;
+        double backRightPower = (y - x - rx) / denominator;
 
         frontLeft0.setPower(frontLeftPower);
         backLeft2.setPower(backLeftPower);
