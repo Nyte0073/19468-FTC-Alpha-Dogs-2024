@@ -45,11 +45,7 @@ public class Mecanum {
         double frontRightPower = (y + x - rx) / denominator;
         double backRightPower = (y - x - rx) / denominator;
 
-        frontLeft0.setPower(frontLeftPower);
-        backLeft2.setPower(backLeftPower);
-        frontRight1.setPower(frontRightPower);
-        backRight3.setPower(backRightPower);
-
+        setPower(new double[] {frontLeftPower, backLeftPower, frontRightPower, backRightPower});
     }
 
     public void setPower(double[] power) {
