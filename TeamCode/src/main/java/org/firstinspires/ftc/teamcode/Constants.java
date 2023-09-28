@@ -6,6 +6,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Constants {
 
+    public static final class OpModes {
+        public static final String linearOp = "Linear Opmode";
+        public static final String teleop = "Basic: Mecanum Teleop";
+    }
+
     public static final class MecanumConstants {
 
         public static final String frontLeftMotor = "frontLeft0";
@@ -22,9 +27,10 @@ public class Constants {
     public static final class IntakeConstants {
 
         public static final String outerIntakeMotor = "outerIntake0";
-        public static final String  innerIntakeMotor = "innerIntake0";
+        public static final String  innerIntakeMotor = "innerIntake2";
 
-        public static final DcMotor.Direction invert = DcMotor.Direction.REVERSE;
+        public static final DcMotor.Direction outerInvert = DcMotor.Direction.REVERSE;
+        public static final DcMotor.Direction innerInvert = DcMotor.Direction.FORWARD;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
     }
 

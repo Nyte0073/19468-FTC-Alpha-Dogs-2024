@@ -18,6 +18,9 @@ public class Intake {
 
         motorConfig(outerIntake0);
         motorConfig(innerIntake2);
+
+        outerIntake0.setDirection(IntakeConstants.outerInvert);
+        innerIntake2.setDirection(IntakeConstants.innerInvert);
     }
 
     public void teleop(Gamepad gamepad1) {
@@ -61,7 +64,6 @@ public class Intake {
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setDirection(IntakeConstants.invert);
 
         return motor;
     }
