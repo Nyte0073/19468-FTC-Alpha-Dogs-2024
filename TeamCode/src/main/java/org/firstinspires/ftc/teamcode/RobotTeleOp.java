@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Mecanum;
+import org.firstinspires.ftc.teamcode.subsystems.Vision;
+import org.firstinspires.ftc.teamcode.subsystems.Winch;
 import org.firstinspires.ftc.teamcode.subsystems.Wrist;
 
 @TeleOp(name = Constants.OpModes.teleop, group = Constants.OpModes.linearOp)
@@ -13,7 +15,9 @@ public class RobotTeleOp extends LinearOpMode {
 
     Mecanum s_Drivetrain;
     Intake s_Intake;
+    Winch s_Winch;
     Wrist s_Wrist;
+    Vision s_Vision;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -24,7 +28,9 @@ public class RobotTeleOp extends LinearOpMode {
 
         s_Drivetrain = new Mecanum(hardwareMap);
         s_Intake = new Intake(hardwareMap);
+        s_Winch = new Winch(hardwareMap);
         s_Wrist = new Wrist(hardwareMap);
+        s_Vision = new Vision(hardwareMap);
 
         waitForStart();
         runtime.reset();
@@ -32,9 +38,11 @@ public class RobotTeleOp extends LinearOpMode {
         while(opModeIsActive()) {
             s_Drivetrain.teleop(gamepad1);
             s_Intake.teleop(gamepad1);
+            s_Winch.teleop(gamepad1);
             s_Wrist.teleop(gamepad1);
 
             s_Drivetrain.periodic(telemetry);
+            s_Winch.periodic(telemetry);
             s_Intake.periodic(telemetry);
             s_Wrist.periodic(telemetry);
 

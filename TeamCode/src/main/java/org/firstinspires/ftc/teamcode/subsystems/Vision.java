@@ -4,7 +4,9 @@ import android.util.Size;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import static org.firstinspires.ftc.teamcode.Constants.VisionConstants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
@@ -20,7 +22,7 @@ public class Vision {
     VisionPortal visionPortal;
 
     public Vision(HardwareMap hardwareMap) {
-        camera = hardwareMap.get(WebcamName.class, "Webcam 1");
+        camera = hardwareMap.get(WebcamName.class, VisionConstants.webcam);
 
         tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
@@ -58,5 +60,12 @@ public class Vision {
 
     public AprilTagPoseFtc getPose() {
         return getTags().get(0).ftcPose;
+    }
+
+    public void periodic(Telemetry telemetry) {
+        if (hasTag()) {
+            telemetry.addLine("Vision:");
+            telemetry.addLine("Has Tag: " + hasTag());
+        }
     }
 }
