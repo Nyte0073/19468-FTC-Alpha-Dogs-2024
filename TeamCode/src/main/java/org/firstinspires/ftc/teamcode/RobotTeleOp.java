@@ -17,7 +17,7 @@ public class RobotTeleOp extends LinearOpMode {
     Intake s_Intake;
     Winch s_Winch;
     Wrist s_Wrist;
-    Vision s_Vision;
+    //-Vision s_Vision;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -30,7 +30,7 @@ public class RobotTeleOp extends LinearOpMode {
         s_Intake = new Intake(hardwareMap);
         s_Winch = new Winch(hardwareMap);
         s_Wrist = new Wrist(hardwareMap);
-        s_Vision = new Vision(hardwareMap);
+        //s_Vision = new Vision(hardwareMap);
 
         waitForStart();
         runtime.reset();
