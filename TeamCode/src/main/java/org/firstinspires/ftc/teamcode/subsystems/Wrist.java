@@ -10,25 +10,25 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Wrist {
 
-    Servo wrist;
+    Servo wrist0;
     double teleopPos = 0;
 
     public Wrist(HardwareMap hardwareMap) {
-        wrist = hardwareMap.get(Servo.class, WristConstants.wristServo);
+        wrist0 = hardwareMap.get(Servo.class, WristConstants.wristServo);
 
-        wrist.setDirection(WristConstants.invert);
+        wrist0.setDirection(WristConstants.invert);
     }
 
     public double getAngle() {
-        return wrist.getPosition() * 300;
+        return wrist0.getPosition() * 300;
     }
 
     public void setAngle(double angle) {
-        wrist.setPosition((angle / 300));
+        wrist0.setPosition((angle / 300));
     }
 
     public void setPos(double position) {
-        wrist.setPosition(position);
+        wrist0.setPosition(position);
     }
 
     public void teleop(Gamepad gamepad1) {

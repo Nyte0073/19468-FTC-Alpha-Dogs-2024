@@ -27,9 +27,10 @@ public class Constants {
     public static final class IntakeConstants {
 
         public static final String outerIntakeMotor = "outerIntake0";
+        public static final String intakeServo = "intakeServo2";
 
         public static final DcMotor.Direction outerInvert = DcMotor.Direction.REVERSE;
-        public static final DcMotor.Direction innerInvert = DcMotor.Direction.FORWARD;
+        public static final Servo.Direction servoInvert = Servo.Direction.FORWARD;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
     }
 
@@ -37,7 +38,7 @@ public class Constants {
 
         public static final String rightWinch2 = "rightWinch2";
 
-        public static final DcMotor.Direction invert = DcMotor.Direction.REVERSE;
+        public static final DcMotor.Direction invert = DcMotor.Direction.FORWARD;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
     }
 
