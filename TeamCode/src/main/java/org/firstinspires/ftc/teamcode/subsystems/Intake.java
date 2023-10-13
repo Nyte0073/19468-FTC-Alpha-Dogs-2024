@@ -36,7 +36,7 @@ public class Intake {
         if (intakeServo2.getPosition() > 0.5) {
             intakeServo2.setPosition(0);
         } else {
-            intakeServo2.setPosition(0.6);
+            intakeServo2.setPosition(0.8 );
         }
     }
 

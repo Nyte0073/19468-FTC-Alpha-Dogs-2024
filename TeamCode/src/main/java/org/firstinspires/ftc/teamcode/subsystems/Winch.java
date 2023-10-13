@@ -19,8 +19,8 @@ public class Winch {
         rightWinch2.setDirection(WinchConstants.invert);
     }
 
-    public void teleop(Gamepad gamepad1) {
-        double winchPower = gamepad1.right_stick_y;
+    public void teleop(Gamepad gamepad2) {
+        double winchPower = gamepad2.right_stick_y;
 
         setPower(winchPower);
     }

@@ -38,8 +38,8 @@ public class RobotTeleOp extends LinearOpMode {
         while(opModeIsActive()) {
             s_Drivetrain.teleop(gamepad1);
             s_Intake.teleop(gamepad1);
-            s_Winch.teleop(gamepad1);
-            s_Wrist.teleop(gamepad1);
+            s_Winch.teleop(gamepad2);
+            s_Wrist.teleop(gamepad2);
 
             s_Drivetrain.periodic(telemetry);
             s_Winch.periodic(telemetry);
