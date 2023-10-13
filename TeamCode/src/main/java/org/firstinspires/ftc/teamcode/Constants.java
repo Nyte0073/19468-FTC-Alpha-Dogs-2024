@@ -8,7 +8,7 @@ public class Constants {
 
     public static final class OpModes {
         public static final String linearOp = "Linear Opmode";
-        public static final String teleop = "Basic: Mecanum Teleop";
+        public static final String teleop = "Teleop";
     }
 
     public static final class MecanumConstants {
