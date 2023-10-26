@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Constants {
@@ -36,7 +35,15 @@ public class Constants {
 
     public static final class WinchConstants {
 
-        public static final String rightWinch2 = "rightWinch2";
+        public static final String winch2 = "rightWinch2";
+
+        public static final DcMotor.Direction invert = DcMotor.Direction.FORWARD;
+        public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
+    }
+
+    public static final class ClimberConstants {
+
+        public static final String climber1 = "climberMotor1";
 
         public static final DcMotor.Direction invert = DcMotor.Direction.FORWARD;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;

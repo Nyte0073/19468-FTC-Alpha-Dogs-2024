@@ -42,7 +42,7 @@ public class Wrist {
         } else if (gamepad2.x) {
             teleopAngle = WristConstants.scoreAngle;
         } else {
-            teleopAngle += gamepad2.left_stick_y / 2;
+            teleopAngle += gamepad2.right_trigger / 2 - gamepad2.left_trigger / 2;
         }
 
         setAngle(teleopAngle);

@@ -5,37 +5,37 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import static org.firstinspires.ftc.teamcode.Constants.WinchConstants;
+import static org.firstinspires.ftc.teamcode.Constants.ClimberConstants;
 
-public class Winch {
+public class Climber {
 
-    DcMotor winchMotor2;
+    DcMotor climberMotor1;
 
-    public Winch(HardwareMap hardwareMap) {
-        winchMotor2 = hardwareMap.get(DcMotor.class, WinchConstants.winch2);
+    public Climber(HardwareMap hardwareMap) {
+        climberMotor1 = hardwareMap.get(DcMotor.class, ClimberConstants.climber1);
 
-        motorConfig(winchMotor2);
+        motorConfig(climberMotor1);
 
-        winchMotor2.setDirection(WinchConstants.invert);
+        climberMotor1.setDirection(ClimberConstants.invert);
     }
 
     public void teleop(Gamepad gamepad2) {
-        double winchPower = gamepad2.right_stick_y;
+        double winchPower = gamepad2.left_stick_y;
 
         setPower(winchPower);
     }
 
     public void setPower(double power) {
-        winchMotor2.setPower(power);
+        climberMotor1.setPower(power);
     }
 
     public double getPower() {
-        return winchMotor2.getPower();
+        return climberMotor1.getPower();
     }
 
     public void periodic(Telemetry telemetry) {
-        telemetry.addLine("Winch Motors");
-        telemetry.addLine("Winch Power: " + getPower());
+        telemetry.addLine("Climber Motor");
+        telemetry.addLine("Climber Power: " + getPower());
     }
 
     /**
@@ -44,7 +44,7 @@ public class Winch {
      * @return configured DcMotor
      */
     public DcMotor motorConfig(DcMotor motor) {
-        motor.setZeroPowerBehavior(WinchConstants.neutralMode);
+        motor.setZeroPowerBehavior(ClimberConstants.neutralMode);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
