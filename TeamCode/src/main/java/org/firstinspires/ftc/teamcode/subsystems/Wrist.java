@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import static org.firstinspires.ftc.teamcode.Constants.WristConstants;
@@ -11,12 +13,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Wrist {
 
     Servo wrist0;
+
     double teleopAngle = 0;
 
     public Wrist(HardwareMap hardwareMap) {
         wrist0 = hardwareMap.get(Servo.class, WristConstants.wristServo);
 
         wrist0.setDirection(WristConstants.invert);
+
     }
 
     public double getAngle() {
