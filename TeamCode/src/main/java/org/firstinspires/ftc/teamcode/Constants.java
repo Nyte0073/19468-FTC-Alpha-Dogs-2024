@@ -26,7 +26,7 @@ public class Constants {
     public static final class IntakeConstants {
 
         public static final String outerIntakeMotor = "outerIntake0";
-        public static final String intakeServo = "intakeServo2";
+        public static final String intakeServo = "intakeServo6";
 
         public static final DcMotor.Direction outerInvert = DcMotor.Direction.FORWARD;
         public static final Servo.Direction servoInvert = Servo.Direction.FORWARD;
@@ -51,10 +51,10 @@ public class Constants {
 
     public static final class WristConstants {
 
-        public static final String wristServo = "wrist0";
-
-        public static final Servo.Direction invert = Servo.Direction.REVERSE;
-
+        public static final String rightWristServo = "rightWrist0";
+        public static final String leftWristServo = "leftWrist2";
+        public static final Servo.Direction rightInvert = Servo.Direction.REVERSE;
+        public static final Servo.Direction leftInvert = Servo.Direction.FORWARD;
         public static final double homeAngle = 88.11488; //0.2937
         public static final double scoreAngle = 0; //0
 

@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import static org.firstinspires.ftc.teamcode.Constants.WristConstants;
@@ -12,31 +10,42 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Wrist {
 
-    Servo wrist0;
+    Servo rightWrist0, leftWrist2;
 
     double teleopAngle = 0;
 
     public Wrist(HardwareMap hardwareMap) {
-        wrist0 = hardwareMap.get(Servo.class, WristConstants.wristServo);
+        rightWrist0 = hardwareMap.get(Servo.class, WristConstants.rightWristServo);
+        leftWrist2 = hardwareMap.get(Servo.class, WristConstants.leftWristServo);
 
-        wrist0.setDirection(WristConstants.invert);
-
+        rightWrist0.setDirection(WristConstants.rightInvert);
+        leftWrist2.setDirection(WristConstants.leftInvert);
     }
 
     public double getAngle() {
-        return wrist0.getPosition() * 300;
+        return ((rightWrist0.getPosition() * 300) + (leftWrist2.getPosition() * 300)) / 2;
+    }
+
+    public double getRightAngle() {
+        return rightWrist0.getPosition() * 300;
+    }
+
+    public double getLeftAngle() {
+        return leftWrist2.getPosition() * 300;
     }
 
     public void setAngle(double angle) {
-        wrist0.setPosition((angle / 300));
+        rightWrist0.setPosition((angle / 300));
+        leftWrist2.setPosition((angle / 300));
     }
 
     public double getPos() {
-        return wrist0.getPosition();
+        return (rightWrist0.getPosition() + leftWrist2.getPosition()) / 2;
     }
 
     public void setPos(double position) {
-        wrist0.setPosition(position);
+        rightWrist0.setPosition(position);
+        leftWrist2.setPosition(position);
     }
 
     public void teleop(Gamepad gamepad2) {
@@ -56,6 +65,8 @@ public class Wrist {
     public void periodic(Telemetry telemetry) {
         telemetry.addLine("Wrist:");
         telemetry.addLine("Wrist Angle: " + getAngle());
+        telemetry.addLine("Left Wrist Angle: " + getLeftAngle());
+        telemetry.addLine("Right Wrist Angle: " + getRightAngle());
         telemetry.addLine("Wrist Pos: " + getPos());
     }
 }

@@ -11,16 +11,16 @@ import static org.firstinspires.ftc.teamcode.Constants.IntakeConstants;
 public class Intake {
 
     DcMotor outerIntake0;
-    Servo intakeServo2;
+    Servo intakeServo4;
 
     public Intake(HardwareMap hardwareMap) {
         outerIntake0 = hardwareMap.get(DcMotor.class, IntakeConstants.outerIntakeMotor);
-        intakeServo2 = hardwareMap.get(Servo.class, IntakeConstants.intakeServo);
+        intakeServo4 = hardwareMap.get(Servo.class, IntakeConstants.intakeServo);
 
         motorConfig(outerIntake0);
 
         outerIntake0.setDirection(IntakeConstants.outerInvert);
-        intakeServo2.setDirection(IntakeConstants.servoInvert);
+        intakeServo4.setDirection(IntakeConstants.servoInvert);
     }
 
     public void teleop(Gamepad gamepad1) {
@@ -33,20 +33,20 @@ public class Intake {
     }
 
     public void toggleIntake() {
-        if (intakeServo2.getPosition() > 0.5) {
-            intakeServo2.setPosition(0);
+        if (intakeServo4.getPosition() > 0.5) {
+            intakeServo4.setPosition(0);
         } else {
-            intakeServo2.setPosition(0.8 );
+            intakeServo4.setPosition(0.8 );
         }
     }
 
     public boolean getIntakeRetracted() {
-        return intakeServo2.getPosition() > 0.5;
+        return intakeServo4.getPosition() > 0.5;
     }
 
     //For calibrating
     public double getIntakePosition() {
-        return intakeServo2.getPosition();
+        return intakeServo4.getPosition();
     }
 
     public void setOuterPower(double power) {
