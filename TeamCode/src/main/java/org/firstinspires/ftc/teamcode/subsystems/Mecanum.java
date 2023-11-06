@@ -95,12 +95,25 @@ public class Mecanum {
         return power;
     }
 
+    public double getRightPosition() {
+        return frontRight1.getCurrentPosition();
+    }
+
+    public double getLeftPosition() {
+        return frontLeft0.getCurrentPosition();
+    }
+
+    public double getXPosition() {
+        return backLeft2.getCurrentPosition();
+    }
+
     public void periodic(Telemetry telemetry) {
         telemetry.addLine("Drive Motors");
         telemetry.addLine("Front Left: " + getPower()[0]);
         telemetry.addLine("Back Left: " + getPower()[1]);
         telemetry.addLine("Front Right: " + getPower()[2]);
         telemetry.addLine("Back Right: " + getPower()[3]);
+        telemetry.addLine("Right Distance: " + getRightPosition());
     }
 
     /**
@@ -111,7 +124,7 @@ public class Mecanum {
     public DcMotor motorConfig(DcMotor motor) {
         motor.setZeroPowerBehavior(MecanumConstants.neutralMode);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         return motor;
     }
