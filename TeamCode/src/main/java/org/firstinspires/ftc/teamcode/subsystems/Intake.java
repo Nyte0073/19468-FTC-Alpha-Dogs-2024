@@ -10,59 +10,35 @@ import static org.firstinspires.ftc.teamcode.Constants.IntakeConstants;
 
 public class Intake {
 
-    DcMotor outerIntake0;
-    Servo intakeServo4;
+    DcMotor intake0;
 
     public Intake(HardwareMap hardwareMap) {
-        outerIntake0 = hardwareMap.get(DcMotor.class, IntakeConstants.outerIntakeMotor);
-        intakeServo4 = hardwareMap.get(Servo.class, IntakeConstants.intakeServo);
+        intake0 = hardwareMap.get(DcMotor.class, IntakeConstants.intakeMotor);
 
-        motorConfig(outerIntake0);
+        motorConfig(intake0);
 
-        outerIntake0.setDirection(IntakeConstants.outerInvert);
-        intakeServo4.setDirection(IntakeConstants.servoInvert);
+        intake0.setDirection(IntakeConstants.invert);
     }
 
     public void teleop(Gamepad gamepad1) {
-        double outerOuttake = gamepad1.left_trigger;
-        double outerIntake = gamepad1.right_trigger;
+        double outtake = gamepad1.left_trigger;
+        double intake = gamepad1.right_trigger;
 
-        if (gamepad1.x) toggleIntake();
-
-        setOuterPower(outerIntake - outerOuttake);
+        setPower(intake - outtake);
     }
 
-    public void toggleIntake() {
-        if (intakeServo4.getPosition() > 0.5) {
-            intakeServo4.setPosition(0);
-        } else {
-            intakeServo4.setPosition(0.8 );
-        }
-    }
-
-    public boolean getIntakeRetracted() {
-        return intakeServo4.getPosition() > 0.5;
-    }
-
-    //For calibrating
-    public double getIntakePosition() {
-        return intakeServo4.getPosition();
-    }
-
-    public void setOuterPower(double power) {
-        outerIntake0.setPower(power);
+    public void setPower(double power) {
+        intake0.setPower(power);
     }
 
     public double getOuterPower() {
-        return outerIntake0.getPower();
+        return intake0.getPower();
     }
 
 
     public void periodic(Telemetry telemetry) {
         telemetry.addLine("Intake Motors");
         telemetry.addLine("Outer Intake Power: " + getOuterPower());
-        telemetry.addLine("Intake Retracted: " + getIntakeRetracted());
-        telemetry.addLine("Intake Pos: " + getIntakePosition());
     }
 
     /**
