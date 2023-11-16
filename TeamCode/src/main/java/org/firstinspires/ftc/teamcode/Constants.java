@@ -25,11 +25,9 @@ public class Constants {
 
     public static final class IntakeConstants {
 
-        public static final String outerIntakeMotor = "outerIntake0";
-        public static final String intakeServo = "intakeServo6";
+        public static final String intakeMotor = "outerIntake0";
 
-        public static final DcMotor.Direction outerInvert = DcMotor.Direction.FORWARD;
-        public static final Servo.Direction servoInvert = Servo.Direction.FORWARD;
+        public static final DcMotor.Direction invert = DcMotor.Direction.REVERSE;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
     }
 
@@ -42,8 +40,8 @@ public class Constants {
     }
 
     public static final class ClimberConstants {
-
-        public static final String climber1 = "climberMotor1";
+        public static final String climber6 = "climberServo6";
+        public static final String climberMotor1 = "climberMotor1";
 
         public static final DcMotor.Direction invert = DcMotor.Direction.FORWARD;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
@@ -51,12 +49,11 @@ public class Constants {
 
     public static final class WristConstants {
 
-        public static final String rightWristServo = "rightWrist0";
-        public static final String leftWristServo = "leftWrist2";
-        public static final Servo.Direction rightInvert = Servo.Direction.REVERSE;
-        public static final Servo.Direction leftInvert = Servo.Direction.FORWARD;
-        public static final double homeAngle = 88.11488; //0.2937
-        public static final double scoreAngle = 0; //0
+        public static final String rightWristServo = "rightWrist2";
+        public static final Servo.Direction rightInvert = Servo.Direction.FORWARD;
+        public static final double scoreAngle = 118.91; //0.2937
+        public static final double homeAngle = 50.0; //0
+        public static final double midAngle = 23.8; //0
 
     }
 
