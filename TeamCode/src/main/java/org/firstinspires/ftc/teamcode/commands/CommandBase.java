@@ -19,4 +19,12 @@ public abstract class CommandBase {
         return true;
     }
 
+    protected boolean runCommand() {
+        while (!onEnd()) {
+            initialize();
+            execute();
+        }
+
+        return onEnd();
+    }
 }

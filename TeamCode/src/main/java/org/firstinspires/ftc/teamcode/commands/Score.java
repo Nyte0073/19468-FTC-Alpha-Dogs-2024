@@ -28,7 +28,6 @@ public class Score extends CommandBase {
 
     @Override
     public void execute() {
-        while (!onEnd()) {
             switch (phase) {
                 case 0:
                     wrist.setAngle(Constants.WristConstants.midAngle);
@@ -43,9 +42,6 @@ public class Score extends CommandBase {
                     phase++;
                     break;
             }
-        }
-
-        return;
     }
 
     @Override

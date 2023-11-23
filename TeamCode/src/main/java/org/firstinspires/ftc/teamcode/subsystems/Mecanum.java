@@ -52,21 +52,27 @@ public class Mecanum {
             imu.resetYaw();
         }
 
-        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-
-        // Rotate the movement direction counter to the bot's rotation
-        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-
-        drive(rotY, rotX * 1.1, rx);
+        drive(y, x * 1.1, rx, true);
     }
 
-    public void drive(double ySpeed, double xSpeed, double rot) {
+    public void drive(double ySpeed, double xSpeed, double rot, boolean fieldOriented) {
+
+        double rotY = ySpeed;
+        double rotX = xSpeed;
+
+        if (fieldOriented) {
+            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+            // Rotate the movement direction counter to the bot's rotation
+            rotX = xSpeed * Math.cos(-botHeading) - ySpeed * Math.sin(-botHeading);
+            rotY = xSpeed * Math.sin(-botHeading) + ySpeed * Math.cos(-botHeading);
+        }
+
         double denominator = Math.max(Math.abs(ySpeed) + Math.abs(xSpeed) + Math.abs(rot), 1);
-        double frontLeftPower = (ySpeed + xSpeed + rot) / denominator;
-        double backLeftPower = (ySpeed - xSpeed + rot) / denominator;
-        double frontRightPower = (ySpeed + xSpeed - rot) / denominator;
-        double backRightPower = (ySpeed - xSpeed - rot) / denominator;
+        double frontLeftPower = (rotY + rotX + rot) / denominator;
+        double backLeftPower = (rotY - rotX + rot) / denominator;
+        double frontRightPower = (rotY + rotX - rot) / denominator;
+        double backRightPower = (rotY - rotX - rot) / denominator;
 
         setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
     }
