@@ -8,15 +8,15 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Pose2d;
 
 import static org.firstinspires.ftc.teamcode.Constants.MecanumConstants;
 
 public class Mecanum {
 
-    DcMotor frontLeft0, frontRight1, backLeft2, backRight3;
-    // Retrieve the IMU from the hardware map
-    IMU imu;
-    // Adjust the orientation parameters to match your robot
+    private DcMotor frontLeft0, frontRight1, backLeft2, backRight3;
+    private IMU imu;
+
     public Mecanum(HardwareMap hardwareMap) {
 
         frontLeft0 = hardwareMap.get(DcMotor.class, MecanumConstants.frontLeftMotor);
@@ -58,30 +58,24 @@ public class Mecanum {
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
         double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
-        rotX = rotX * 1.1;  // Counteract imperfect strafing
-
-        // Denominator is the largest motor power (absolute value) or 1
-        // This ensures all the powers maintain the same ratio,
-        // but only if at least one is out of the range [-1, 1]
-        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-        double frontLeftPower = (rotY + rotX + rx) / denominator;
-        double backLeftPower = (rotY - rotX + rx) / denominator;
-        double frontRightPower = (rotY + rotX - rx) / denominator;
-        double backRightPower = (rotY - rotX - rx) / denominator;
-
-        frontLeft0.setPower(frontLeftPower);
-        backLeft2.setPower(backLeftPower);
-        frontRight1.setPower(frontRightPower);
-        backRight3.setPower(backRightPower);
-
-        //[setPower(new double[] {frontLeftPower, backLeftPower, frontRightPower, backRightPower});
+        drive(rotY, rotX * 1.1, rx);
     }
 
-    public void setPower(double[] power) {
-        frontLeft0.setPower(power[0]);
-        backLeft2.setPower(power[1]);
-        frontRight1.setPower(power[2]);
-        backRight3.setPower(power[3]);
+    public void drive(double ySpeed, double xSpeed, double rot) {
+        double denominator = Math.max(Math.abs(ySpeed) + Math.abs(xSpeed) + Math.abs(rot), 1);
+        double frontLeftPower = (ySpeed + xSpeed + rot) / denominator;
+        double backLeftPower = (ySpeed - xSpeed + rot) / denominator;
+        double frontRightPower = (ySpeed + xSpeed - rot) / denominator;
+        double backRightPower = (ySpeed - xSpeed - rot) / denominator;
+
+        setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
+    }
+
+    public void setPower(double frontLeft, double backLeft, double frontRight, double backRight) {
+        frontLeft0.setPower(frontLeft);
+        backLeft2.setPower(backLeft);
+        frontRight1.setPower(frontRight);
+        backRight3.setPower(backRight);
     }
 
     public double[] getPower() {
@@ -95,6 +89,10 @@ public class Mecanum {
         return power;
     }
 
+    public double getX() {
+        return backLeft2.getCurrentPosition();
+    }
+
     public double getRightPosition() {
         return frontRight1.getCurrentPosition();
     }
@@ -103,17 +101,27 @@ public class Mecanum {
         return frontLeft0.getCurrentPosition();
     }
 
-    public double getXPosition() {
+    public double getY() {
+        return (getRightPosition() + getLeftPosition()) / 2;
+    }
+    public double getYaw() {
         return backLeft2.getCurrentPosition();
     }
 
+    public Pose2d getPose() {
+        return new Pose2d(getX(), getY(), getYaw());
+    }
+
     public void periodic(Telemetry telemetry) {
-        telemetry.addLine("Drive Motors");
+        telemetry.addLine("Drive:");
         telemetry.addLine("Front Left: " + getPower()[0]);
         telemetry.addLine("Back Left: " + getPower()[1]);
         telemetry.addLine("Front Right: " + getPower()[2]);
         telemetry.addLine("Back Right: " + getPower()[3]);
-        telemetry.addLine("Right Distance: " + getRightPosition());
+        telemetry.addLine("Position:");
+        telemetry.addLine("Y: " + getY());
+        telemetry.addLine("X: " + getX());
+        telemetry.addLine("Yaw: " + getYaw());
     }
 
     /**
