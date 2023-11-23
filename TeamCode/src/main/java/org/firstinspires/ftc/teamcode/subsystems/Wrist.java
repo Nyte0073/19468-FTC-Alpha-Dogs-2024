@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import static org.firstinspires.ftc.teamcode.Constants.WristConstants;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities;
 
 public class Wrist {
 
@@ -37,9 +39,8 @@ public class Wrist {
     }
 
     public void teleop(Gamepad gamepad2) {
-        teleopAngle = getAngle();
         if (gamepad2.a) {
-            teleopAngle = WristConstants.scoreAngle;
+            teleopAngle = Constants.ScoringConstants.scoreAngle;
         } else if (gamepad2.x) {
             teleopAngle = WristConstants.homeAngle;
         } else if (gamepad2.b) {
@@ -47,6 +48,8 @@ public class Wrist {
         } else {
             teleopAngle += gamepad2.right_trigger / 2 - gamepad2.left_trigger / 2;
         }
+
+        teleopAngle = Utilities.clip(teleopAngle, 300, 0);
 
         setAngle(teleopAngle);
 

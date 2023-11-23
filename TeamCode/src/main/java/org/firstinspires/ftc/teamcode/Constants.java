@@ -1,7 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.control.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.subsystems.ArmConfig;
 
 public class Constants {
 
@@ -16,6 +21,10 @@ public class Constants {
         public static final String frontRightMotor = "frontRight1";
         public static final String backLeftMotor = "backLeft2";
         public static final String backRightMotor = "backRight3";
+
+        public static final PIDCoefficients yPID = new PIDCoefficients(0, 0, 0);
+        public static final PIDCoefficients xPID = new PIDCoefficients(0, 0, 0);
+        public static final PIDCoefficients yawPID = new PIDCoefficients(0, 0, 0);
 
         public static final DcMotor.Direction invertLeft = DcMotor.Direction.REVERSE;
         public static final DcMotor.Direction invertRight = DcMotor.Direction.FORWARD;
@@ -34,7 +43,8 @@ public class Constants {
     public static final class WinchConstants {
 
         public static final String winch2 = "rightWinch2";
-
+        public static final double encoderToInches = 1;
+        public static final PIDCoefficients pidCoefficients = new PIDCoefficients(0, 0, 0);
         public static final DcMotor.Direction invert = DcMotor.Direction.FORWARD;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
     }
@@ -51,7 +61,6 @@ public class Constants {
 
         public static final String rightWristServo = "rightWrist2";
         public static final Servo.Direction rightInvert = Servo.Direction.FORWARD;
-        public static final double scoreAngle = 118.91; //0.2937
         public static final double homeAngle = 50.0; //0
         public static final double midAngle = 23.8; //0
 
@@ -60,6 +69,19 @@ public class Constants {
     public static final class VisionConstants {
 
         public static final String webcam = "Webcam 1";
+
+    }
+
+    public static final class ScoringConstants {
+
+        public static final double armLevel1 = 0.0;
+        public static final double armLevel2 = 0.0;
+        public static final double armLevel3 = 0.0;
+        public static final double scoreAngle = 118.91; //0.2937
+
+        ArmConfig scoreLow = new ArmConfig(armLevel1, scoreAngle);
+        ArmConfig scoreMid = new ArmConfig(armLevel2, scoreAngle);
+        ArmConfig scoreHigh = new ArmConfig(armLevel3, scoreAngle);
 
     }
 

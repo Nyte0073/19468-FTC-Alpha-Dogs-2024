@@ -63,9 +63,7 @@ public class Vision {
     }
 
     public void periodic(Telemetry telemetry) {
-        if (hasTag()) {
-            telemetry.addLine("Vision:");
-            telemetry.addLine("Has Tag: " + hasTag());
-        }
+        telemetry.addLine("Vision:");
+        telemetry.addLine("Has Tag: " + hasTag());
     }
 }
