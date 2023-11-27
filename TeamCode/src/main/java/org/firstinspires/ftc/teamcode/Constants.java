@@ -13,6 +13,7 @@ public class Constants {
     public static final class OpModes {
         public static final String linearOp = "Linear Opmode";
         public static final String teleop = "Teleop";
+        public static final String pidOp = "PID Tune";
     }
 
     public static final class MecanumConstants {
@@ -29,6 +30,14 @@ public class Constants {
         public static final DcMotor.Direction invertLeft = DcMotor.Direction.REVERSE;
         public static final DcMotor.Direction invertRight = DcMotor.Direction.FORWARD;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
+
+        public static final double ticksPerRev = 8192;
+        public static final double wheelRadius = 38 / 25.4; //38mm in inches
+        public static final double gearRatio = 1;
+
+        //TODO: get this
+        public static double LATERAL_DISTANCE = 0; // in - distance between left and right
+        public static double FORWARD_OFFSET = 0; // in - distance between the forward center
 
     }
 
