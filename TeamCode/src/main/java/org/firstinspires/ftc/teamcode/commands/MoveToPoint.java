@@ -91,4 +91,7 @@ public class MoveToPoint extends CommandBase {
         return Pose2d.atPose(drive.getPose(), targetPose, 0.25, 1);
     }
 
+    public void updatePose(Pose2d newPose) {
+        targetPose = newPose;
+    }
 }

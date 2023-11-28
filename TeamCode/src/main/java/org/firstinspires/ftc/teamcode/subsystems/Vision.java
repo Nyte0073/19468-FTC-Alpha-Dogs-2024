@@ -10,8 +10,11 @@ import static org.firstinspires.ftc.teamcode.Constants.VisionConstants;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.Pose2d;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
+import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
@@ -27,6 +30,8 @@ public class Vision {
     AprilTagProcessor tagProcessor;
     TfodProcessor pieceProcessor;
 
+    AprilTagLibrary tagLib;
+
     VisionPortal visionPortal;
 
     public Vision(HardwareMap hardwareMap) {
@@ -38,7 +43,7 @@ public class Vision {
                 .setDrawCubeProjection(true)
                 .setDrawTagID(true)
                 .setDrawTagOutline(true)
-                .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
+                .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
                 .build();
 
         pieceProcessor = new TfodProcessor.Builder()

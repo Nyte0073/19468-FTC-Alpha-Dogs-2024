@@ -34,6 +34,12 @@ public class Pose2d {
         yaw = newYaw;
     }
 
+    public void updatePose(Pose2d newPose) {
+        setY(newPose.getY());
+        setX(newPose.getX());
+        setYaw(newPose.getYaw());
+    }
+
     public static boolean atPose(Pose2d currentPose, Pose2d targetPose, double coordTolerance, double yawTolerance) {
         boolean xCheck = Utilities.withinBounds(currentPose.getX(), targetPose.getX(), coordTolerance);
         boolean yCheck = Utilities.withinBounds(currentPose.getY(), targetPose.getY(), coordTolerance);

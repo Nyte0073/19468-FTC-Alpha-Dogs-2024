@@ -17,6 +17,8 @@ public class Mecanum {
     private DcMotor frontLeft0, frontRight1, backLeft2, backRight3;
     private IMU imu;
 
+    private Pose2d currentPose;
+
     public Mecanum(HardwareMap hardwareMap) {
 
         frontLeft0 = hardwareMap.get(DcMotor.class, MecanumConstants.frontLeftMotor);
@@ -37,10 +39,12 @@ public class Mecanum {
         imu = hardwareMap.get(IMU.class, "imu");
 
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
+
+        currentPose = new Pose2d(0,0,0);
     }
 
     public void teleop(Gamepad gamepad1) {
@@ -115,7 +119,10 @@ public class Mecanum {
     }
 
     public Pose2d getPose() {
-        return new Pose2d(getX(), getY(), getYaw());
+        return currentPose;
+    }
+    public void setPose(Pose2d newPose) {
+        currentPose.updatePose(newPose);
     }
 
     public void periodic(Telemetry telemetry) {
@@ -125,9 +132,11 @@ public class Mecanum {
         telemetry.addLine("Front Right: " + getPower()[2]);
         telemetry.addLine("Back Right: " + getPower()[3]);
         telemetry.addLine("Position:");
-        telemetry.addLine("Y: " + getY());
-        telemetry.addLine("X: " + getX());
-        telemetry.addLine("Yaw: " + getYaw());
+        telemetry.addLine("Y: " + getPose().getY());
+        telemetry.addLine("X: " + getPose().getX());
+        telemetry.addLine("Yaw: " + getPose().getYaw());
+
+        setPose(new Pose2d(getY(), getX(), getYaw()));
     }
 
     /**

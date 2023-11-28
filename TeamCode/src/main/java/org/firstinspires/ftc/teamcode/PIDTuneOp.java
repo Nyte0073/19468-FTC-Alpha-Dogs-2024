@@ -21,48 +21,83 @@ public class PIDTuneOp extends LinearOpMode {
     double i = 0;
     double d = 0;
 
-    double interval = 0.025;
+    double interval = 0.01;
 
-    double setPoint = 0;
+    double setPoint = 15;
     double measurement = 0;
     boolean isRunning = false;
+
+    int pidSwap = 0;
+    int systemSwap = 0;
+    int pidIncrement = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
+        waitForStart();
+
         while (opModeIsActive()) {
 
             //Subsystem Selector
-            if (gamepad1.left_bumper) {
-                currentOption = (int) Utilities.clip(currentOption - 1, options.length, 0);
-            } else if (gamepad1.right_bumper) {
-                currentOption = (int) Utilities.clip(currentOption + 1, options.length, 0);
-            }
-
-            //PID Selector
-            if (gamepad1.dpad_left) {
-                currentPID = (int) Utilities.clip(currentPID - 1, pid.length, 0);
-            } else if (gamepad1.dpad_right) {
-                currentPID = (int) Utilities.clip(currentPID + 1, pid.length, 0);
-            }
-
-            //PID Selector
-            if (gamepad1.dpad_up) {
-
-                switch (pid[currentPID]) {
-                    case P:
-
-                    break;
-                    case I:
-
-                    break;
-                    case D:
-
-                    break;
+            if (systemSwap == 0) {
+                if (gamepad1.left_bumper) {
+                    currentOption = (int) Utilities.clip(currentOption - 1, options.length - 1, 0);
+                    systemSwap++;
+                } else if (gamepad1.right_bumper) {
+                    currentOption = (int) Utilities.clip(currentOption + 1, options.length - 1, 0);
+                    systemSwap++;
                 }
 
-            } else if (gamepad1.dpad_right) {
-                currentPID = (int) Utilities.clip(currentPID + 1, pid.length, 0);
+            } else if (!gamepad1.left_bumper && !gamepad1.right_bumper) {
+                systemSwap = 0;
+            }
+
+            //PID Selector
+            if (pidSwap == 0) {
+                if (gamepad1.dpad_left) {
+                    currentPID = (int) Utilities.clip(currentPID - 1, pid.length - 1, 0);
+                    pidSwap++;
+                } else if (gamepad1.dpad_right) {
+                    currentPID = (int) Utilities.clip(currentPID + 1, pid.length - 1, 0);
+                    pidSwap++;
+                }
+            } else if (!gamepad1.dpad_left && !gamepad1.dpad_right) {
+                pidSwap = 0;
+            }
+
+            //PID Selector
+            if (pidIncrement == 0) {
+                if (gamepad1.dpad_up) {
+
+                    switch (pid[currentPID]) {
+                        case P:
+                            p += interval;
+                            break;
+                        case I:
+                            i += interval;
+                            break;
+                        case D:
+                            d += interval;
+                            break;
+                    }
+                    pidIncrement++;
+
+                } else if (gamepad1.dpad_down) {
+                    switch (pid[currentPID]) {
+                        case P:
+                            p -= interval;
+                            break;
+                        case I:
+                            i -= interval;
+                            break;
+                        case D:
+                            d -= interval;
+                            break;
+                    }
+                    pidIncrement++;
+                }
+            } else if (!gamepad1.dpad_down && !gamepad1.dpad_up) {
+                pidIncrement = 0;
             }
 
             if (gamepad1.a) {
@@ -72,6 +107,7 @@ public class PIDTuneOp extends LinearOpMode {
 
                 Mecanum drive = new Mecanum(hardwareMap);
                 Winch winch = new Winch(hardwareMap);
+                periodic();
 
                 switch (options[currentOption]) {
                     case MECANUMY:
@@ -99,6 +135,7 @@ public class PIDTuneOp extends LinearOpMode {
                         }
                         break;
                     case WINCH:
+                        System.out.println("AA");
                         pid.setTargetPosition(15);
                         while (Utilities.withinBounds(winch.getPosition(), pid.getTargetPosition(), 1)) {
                             measurement = winch.getPosition();
@@ -126,6 +163,12 @@ public class PIDTuneOp extends LinearOpMode {
         telemetry.addData("Setpoint ", setPoint);
         telemetry.addData("Measurement", measurement);
         telemetry.addData("Running ", isRunning);
+
+        telemetry.addData("pidswap ", pidSwap);
+        telemetry.addData("systemswap ", systemSwap);
+        telemetry.addData("pidincrement ", pidIncrement);
+
+        telemetry.update();
     }
 
     enum subsystems {
@@ -135,4 +178,5 @@ public class PIDTuneOp extends LinearOpMode {
     enum PID {
         P, I, D;
     }
+
 }

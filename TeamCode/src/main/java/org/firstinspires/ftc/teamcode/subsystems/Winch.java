@@ -18,6 +18,8 @@ public class Winch {
 
     Constants.WinchLevel level = Constants.WinchLevel.LOW;
 
+    int levelSwap = 0;
+
     public Winch(HardwareMap hardwareMap) {
         winchMotor2 = hardwareMap.get(DcMotor.class, WinchConstants.winch2);
 
@@ -29,34 +31,37 @@ public class Winch {
     }
 
     public void teleop(Gamepad gamepad2) {
-        //Manual
-        if (!Utilities.withinBounds(gamepad2.right_stick_y, 0, 0.1)) {
-            double winchPower = gamepad2.right_stick_y;
-
-            setPower(winchPower);
-        }
 
         //Winch levels
-        if (gamepad2.dpad_up) {
+        if (gamepad2.dpad_up && levelSwap == 0) {
             level = level == Constants.WinchLevel.LOW ? Constants.WinchLevel.MID : Constants.WinchLevel.HIGH;
-        } else if (gamepad2.dpad_down) {
+            levelSwap++;
+        } else if (gamepad2.dpad_down && levelSwap == 0) {
             level = level == Constants.WinchLevel.HIGH ? Constants.WinchLevel.MID : Constants.WinchLevel.LOW;
-        }
-
-        switch (level) {
-            case LOW:
-                setSetpoint(Constants.ScoringConstants.scoreLow.getArmExtension());
-                break;
-            case MID:
-                setSetpoint(Constants.ScoringConstants.scoreMid.getArmExtension());
-                break;
-            case HIGH:
-                setSetpoint(Constants.ScoringConstants.scoreHigh.getArmExtension());
-                break;
+            levelSwap++;
+        } else if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
+            levelSwap = 0;
         }
 
         if (gamepad2.a) {
+            switch (level) {
+                case LOW:
+                    setSetpoint(Constants.ScoringConstants.scoreLow.getArmExtension());
+                    break;
+                case MID:
+                    setSetpoint(Constants.ScoringConstants.scoreMid.getArmExtension());
+                    break;
+                case HIGH:
+                    setSetpoint(Constants.ScoringConstants.scoreHigh.getArmExtension());
+                    break;
+            }
+
             setPower(getSetpointCalc());
+        } else {
+            //Manual
+            double winchPower = gamepad2.right_stick_y;
+
+            setPower(winchPower);
         }
 
     }

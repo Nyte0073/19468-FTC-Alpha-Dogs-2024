@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -12,19 +13,17 @@ import org.firstinspires.ftc.teamcode.subsystems.Vision;
 import org.firstinspires.ftc.teamcode.subsystems.Winch;
 import org.firstinspires.ftc.teamcode.subsystems.Wrist;
 
-@TeleOp(name = Constants.OpModes.teleop, group = Constants.OpModes.linearOp)
+@Autonomous (name = Constants.OpModes.teleop, group = Constants.OpModes.linearOp)
 public class RobotTeleOp extends LinearOpMode {
 
     Mecanum s_Drivetrain;
     Intake s_Intake;
     Winch s_Winch;
     Wrist s_Wrist;
-    //Vision s_Vision;
+    Vision s_Vision;
     Climber s_Climber;
 
     private ElapsedTime runtime = new ElapsedTime();
-
-    Score score = new Score(s_Winch, s_Wrist, s_Winch.getLevel(), gamepad2, true);
 
     @Override
     public void runOpMode() {
@@ -35,23 +34,25 @@ public class RobotTeleOp extends LinearOpMode {
         s_Intake = new Intake(hardwareMap);
         s_Winch = new Winch(hardwareMap);
         s_Wrist = new Wrist(hardwareMap);
-        //s_Vision = new Vision(hardwareMap);
+        s_Vision = new Vision(hardwareMap);
         s_Climber = new Climber(hardwareMap);
+
+        Score score = new Score(s_Winch, s_Wrist, s_Winch.getLevel(), gamepad2, true);
+
+        score.setLevel(s_Winch.getLevel());
 
         waitForStart();
         runtime.reset();
 
-        score.setLevel(s_Winch.getLevel());
 
         while(opModeIsActive()) {
             s_Drivetrain.teleop(gamepad1);
             s_Intake.teleop(gamepad1);
             s_Winch.teleop(gamepad2);
-            s_Wrist.teleop(gamepad2);
+            s_Wrist.teleop(gamepad1, gamepad2);
             s_Climber.teleop(gamepad2);
 
             if (gamepad2.b) {
-
                 score.initialize();
                 score.execute();
             }
@@ -60,6 +61,7 @@ public class RobotTeleOp extends LinearOpMode {
             s_Winch.periodic(telemetry);
             s_Intake.periodic(telemetry);
             s_Wrist.periodic(telemetry);
+            s_Vision.periodic(telemetry);
             s_Climber.periodic(telemetry);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());

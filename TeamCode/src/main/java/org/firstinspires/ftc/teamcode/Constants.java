@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,6 +15,8 @@ public class Constants {
         public static final String linearOp = "Linear Opmode";
         public static final String teleop = "Teleop";
         public static final String pidOp = "PID Tune";
+
+        public static final String parkAuto = "Park";
     }
 
     public static final class MecanumConstants {
@@ -70,7 +73,9 @@ public class Constants {
     public static final class WristConstants {
 
         public static final String rightWristServo = "rightWrist2";
+        public static final String wristWheel = "wristWheel0";
         public static final Servo.Direction rightInvert = Servo.Direction.FORWARD;
+        public static final CRServo.Direction wheelInvert = CRServo.Direction.FORWARD;
         public static final double homeAngle = 50.0; //0
         public static final double midAngle = 23.8; //0
 
@@ -93,6 +98,14 @@ public class Constants {
         public static final ArmConfig scoreLow = new ArmConfig(armLevel1, scoreAngle);
         public static final ArmConfig scoreMid = new ArmConfig(armLevel2, scoreAngle);
         public static final ArmConfig scoreHigh = new ArmConfig(armLevel3, scoreAngle);
+
+    }
+
+    /**
+     * The pose is based on red, x should be flipped for blue
+     */
+    public static final class AutoPoses {
+        public static final Pose2d parkClose = new Pose2d(0,0, 0);
 
     }
 
