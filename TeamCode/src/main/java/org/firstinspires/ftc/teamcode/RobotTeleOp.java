@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.commands.Score;
 import org.firstinspires.ftc.teamcode.subsystems.Climber;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Mecanum;
@@ -23,6 +24,8 @@ public class RobotTeleOp extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
+    Score score = new Score(s_Winch, s_Wrist, s_Winch.getLevel(), gamepad2, true);
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -38,12 +41,20 @@ public class RobotTeleOp extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        score.setLevel(s_Winch.getLevel());
+
         while(opModeIsActive()) {
             s_Drivetrain.teleop(gamepad1);
             s_Intake.teleop(gamepad1);
             s_Winch.teleop(gamepad2);
             s_Wrist.teleop(gamepad2);
             s_Climber.teleop(gamepad2);
+
+            if (gamepad2.b) {
+
+                score.initialize();
+                score.execute();
+            }
 
             s_Drivetrain.periodic(telemetry);
             s_Winch.periodic(telemetry);

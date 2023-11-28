@@ -1,20 +1,22 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import static org.firstinspires.ftc.teamcode.Constants.WinchConstants;
+
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities;
-
-import static org.firstinspires.ftc.teamcode.Constants.WinchConstants;
 
 public class Winch {
 
     DcMotor winchMotor2;
     PIDFController pidController;
+
+    Constants.WinchLevel level = Constants.WinchLevel.LOW;
 
     public Winch(HardwareMap hardwareMap) {
         winchMotor2 = hardwareMap.get(DcMotor.class, WinchConstants.winch2);
@@ -27,9 +29,40 @@ public class Winch {
     }
 
     public void teleop(Gamepad gamepad2) {
-        double winchPower = gamepad2.right_stick_y;
+        //Manual
+        if (!Utilities.withinBounds(gamepad2.right_stick_y, 0, 0.1)) {
+            double winchPower = gamepad2.right_stick_y;
 
-        setPower(winchPower);
+            setPower(winchPower);
+        }
+
+        //Winch levels
+        if (gamepad2.dpad_up) {
+            level = level == Constants.WinchLevel.LOW ? Constants.WinchLevel.MID : Constants.WinchLevel.HIGH;
+        } else if (gamepad2.dpad_down) {
+            level = level == Constants.WinchLevel.HIGH ? Constants.WinchLevel.MID : Constants.WinchLevel.LOW;
+        }
+
+        switch (level) {
+            case LOW:
+                setSetpoint(Constants.ScoringConstants.scoreLow.getArmExtension());
+                break;
+            case MID:
+                setSetpoint(Constants.ScoringConstants.scoreMid.getArmExtension());
+                break;
+            case HIGH:
+                setSetpoint(Constants.ScoringConstants.scoreHigh.getArmExtension());
+                break;
+        }
+
+        if (gamepad2.a) {
+            setPower(getSetpointCalc());
+        }
+
+    }
+
+    public Constants.WinchLevel getLevel() {
+        return level;
     }
 
     public void setPower(double power) {
@@ -41,7 +74,9 @@ public class Winch {
     }
 
     //TODO: convert to inches
-    public double getPosition() {return winchMotor2.getCurrentPosition() * WinchConstants.encoderToInches;}
+    public double getPosition() {
+        return winchMotor2.getCurrentPosition() * WinchConstants.encoderToInches;
+    }
 
     public void setSetpoint(double position) {
         pidController.setTargetPosition(position);
@@ -51,13 +86,19 @@ public class Winch {
         return Utilities.withinBounds(getPosition(), pidController.getTargetPosition(), 0.5);
     }
 
+    public double getSetpointCalc() {
+        return pidController.update(getPosition());
+    }
+
     public void periodic(Telemetry telemetry) {
         telemetry.addLine("Winch Motors");
         telemetry.addLine("Winch Power: " + getPower());
+        telemetry.addLine("Winch Level: " + getLevel());
     }
 
     /**
      * Standard motor config for all drivetrain motors
+     *
      * @param motor DcMotor to  configure
      * @return configured DcMotor
      */
@@ -68,4 +109,6 @@ public class Winch {
 
         return motor;
     }
+
+
 }

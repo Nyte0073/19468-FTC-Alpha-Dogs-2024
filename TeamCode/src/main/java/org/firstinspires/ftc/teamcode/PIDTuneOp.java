@@ -46,6 +46,25 @@ public class PIDTuneOp extends LinearOpMode {
                 currentPID = (int) Utilities.clip(currentPID + 1, pid.length, 0);
             }
 
+            //PID Selector
+            if (gamepad1.dpad_up) {
+
+                switch (pid[currentPID]) {
+                    case P:
+
+                    break;
+                    case I:
+
+                    break;
+                    case D:
+
+                    break;
+                }
+
+            } else if (gamepad1.dpad_right) {
+                currentPID = (int) Utilities.clip(currentPID + 1, pid.length, 0);
+            }
+
             if (gamepad1.a) {
                 PIDFController pid = new PIDFController(new PIDCoefficients(p, i, d), 0);
 

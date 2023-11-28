@@ -34,6 +34,7 @@ public class Constants {
         public static final double ticksPerRev = 8192;
         public static final double wheelRadius = 38 / 25.4; //38mm in inches
         public static final double gearRatio = 1;
+        public static final double ticksToInch = ticksPerRev / (2 * wheelRadius * Math.PI);
 
         //TODO: get this
         public static double LATERAL_DISTANCE = 0; // in - distance between left and right
@@ -77,7 +78,8 @@ public class Constants {
 
     public static final class VisionConstants {
 
-        public static final String webcam = "Webcam 1";
+        public static final String scoreCam = "scoreCam";
+        public static final String intakeCam = "intakeCam";
 
     }
 
@@ -88,10 +90,14 @@ public class Constants {
         public static final double armLevel3 = 0.0;
         public static final double scoreAngle = 118.91; //0.2937
 
-        ArmConfig scoreLow = new ArmConfig(armLevel1, scoreAngle);
-        ArmConfig scoreMid = new ArmConfig(armLevel2, scoreAngle);
-        ArmConfig scoreHigh = new ArmConfig(armLevel3, scoreAngle);
+        public static final ArmConfig scoreLow = new ArmConfig(armLevel1, scoreAngle);
+        public static final ArmConfig scoreMid = new ArmConfig(armLevel2, scoreAngle);
+        public static final ArmConfig scoreHigh = new ArmConfig(armLevel3, scoreAngle);
 
+    }
+
+    public enum WinchLevel {
+        LOW, MID, HIGH
     }
 
 }

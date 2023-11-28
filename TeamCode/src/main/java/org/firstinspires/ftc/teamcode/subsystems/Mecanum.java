@@ -96,15 +96,15 @@ public class Mecanum {
     }
 
     public double getX() {
-        return backLeft2.getCurrentPosition();
+        return backLeft2.getCurrentPosition() * MecanumConstants.ticksToInch;
     }
 
     public double getRightPosition() {
-        return frontRight1.getCurrentPosition();
+        return frontRight1.getCurrentPosition() * MecanumConstants.ticksToInch;
     }
 
     public double getLeftPosition() {
-        return frontLeft0.getCurrentPosition();
+        return frontLeft0.getCurrentPosition() * MecanumConstants.ticksToInch;
     }
 
     public double getY() {
