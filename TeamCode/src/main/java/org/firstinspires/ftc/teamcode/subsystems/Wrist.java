@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.Constants.WristConstants;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import static org.firstinspires.ftc.teamcode.Constants.WristConstants;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
@@ -18,6 +18,7 @@ public class Wrist {
 
     double teleopAngle = WristConstants.homeAngle;
     double teleopSpeed = 0.5;
+    int wristSwap = 0;
 
     public Wrist(HardwareMap hardwareMap) {
         rightWrist2 = hardwareMap.get(Servo.class, WristConstants.rightWristServo);
@@ -33,6 +34,7 @@ public class Wrist {
 
     public void setAngle(double angle) {
         rightWrist2.setPosition((angle / 300));
+        teleopAngle = angle;
     }
 
     public double getPos() {
@@ -52,14 +54,18 @@ public class Wrist {
     }
 
     public void teleop(Gamepad gamepad1, Gamepad gamepad2) {
-        if (gamepad2.a) {
-            teleopAngle = Constants.ScoringConstants.scoreAngle;
-        } else if (gamepad2.x) {
-            teleopAngle = WristConstants.homeAngle;
-        } else if (gamepad2.b) {
-            teleopAngle = WristConstants.midAngle;
+        if (gamepad2.x && wristSwap == 0) {
+
+            if (getAngle() == WristConstants.homeAngle) {
+                teleopAngle = Constants.ScoringConstants.scoreAngle;
+            } else {
+                teleopAngle = WristConstants.homeAngle;
+            }
+            wristSwap++;
+        } else  if (!gamepad2.x && wristSwap != 0) {
+            wristSwap = 0;
         } else {
-            teleopAngle += gamepad2.right_trigger / 2 - gamepad2.left_trigger / 2;
+            teleopAngle += gamepad2.right_trigger - gamepad2.left_trigger;
         }
 
         if (gamepad1.right_bumper) {

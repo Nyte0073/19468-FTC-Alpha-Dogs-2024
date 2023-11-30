@@ -104,18 +104,18 @@ public class Mecanum {
     }
 
     public double getRightPosition() {
-        return frontRight1.getCurrentPosition() * MecanumConstants.ticksToInch;
+        return -frontRight1.getCurrentPosition() * MecanumConstants.ticksToInch;
     }
 
     public double getLeftPosition() {
-        return frontLeft0.getCurrentPosition() * MecanumConstants.ticksToInch;
+        return -frontLeft0.getCurrentPosition() * MecanumConstants.ticksToInch;
     }
 
     public double getY() {
         return (getRightPosition() + getLeftPosition()) / 2;
     }
     public double getYaw() {
-        return backLeft2.getCurrentPosition();
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
     }
 
     public Pose2d getPose() {
@@ -136,7 +136,7 @@ public class Mecanum {
         telemetry.addLine("X: " + getPose().getX());
         telemetry.addLine("Yaw: " + getPose().getYaw());
 
-        setPose(new Pose2d(getY(), getX(), getYaw()));
+        setPose(new Pose2d(getX(), getY(), getYaw()));
     }
 
     /**

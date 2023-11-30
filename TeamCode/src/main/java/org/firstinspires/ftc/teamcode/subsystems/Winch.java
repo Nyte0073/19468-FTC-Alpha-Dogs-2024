@@ -27,17 +27,17 @@ public class Winch {
 
         winchMotor2.setDirection(WinchConstants.invert);
 
-        pidController = new PIDFController(WinchConstants.pidCoefficients, 0);
+        pidController = new PIDFController(WinchConstants.winchPID, 0);
     }
 
     public void teleop(Gamepad gamepad2) {
 
         //Winch levels
         if (gamepad2.dpad_up && levelSwap == 0) {
-            level = level == Constants.WinchLevel.LOW ? Constants.WinchLevel.MID : Constants.WinchLevel.HIGH;
+            level = level == Constants.WinchLevel.HOME ? Constants.WinchLevel.LOW : (level == Constants.WinchLevel.LOW ? Constants.WinchLevel.MID : Constants.WinchLevel.HIGH);
             levelSwap++;
         } else if (gamepad2.dpad_down && levelSwap == 0) {
-            level = level == Constants.WinchLevel.HIGH ? Constants.WinchLevel.MID : Constants.WinchLevel.LOW;
+            level = level == Constants.WinchLevel.HIGH ? Constants.WinchLevel.MID : (level == Constants.WinchLevel.MID ? Constants.WinchLevel.LOW : Constants.WinchLevel.HOME);
             levelSwap++;
         } else if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
             levelSwap = 0;
@@ -45,6 +45,9 @@ public class Winch {
 
         if (gamepad2.a) {
             switch (level) {
+                case HOME:
+                    setSetpoint(0);
+                    break;
                 case LOW:
                     setSetpoint(Constants.ScoringConstants.scoreLow.getArmExtension());
                     break;
@@ -56,10 +59,14 @@ public class Winch {
                     break;
             }
 
-            setPower(getSetpointCalc());
+            if (!atSetpoint()) {
+                setPower(getSetpointCalc());
+            } else {
+                setPower(0);
+            }
         } else {
             //Manual
-            double winchPower = gamepad2.right_stick_y;
+            double winchPower = -gamepad2.right_stick_y;
 
             setPower(winchPower);
         }
@@ -88,7 +95,7 @@ public class Winch {
     }
 
     public boolean atSetpoint() {
-        return Utilities.withinBounds(getPosition(), pidController.getTargetPosition(), 0.5);
+        return Utilities.withinBounds(getPosition(), pidController.getTargetPosition(), WinchConstants.tolerance);
     }
 
     public double getSetpointCalc() {
@@ -98,6 +105,7 @@ public class Winch {
     public void periodic(Telemetry telemetry) {
         telemetry.addLine("Winch Motors");
         telemetry.addLine("Winch Power: " + getPower());
+        telemetry.addData("Winch Position: ", getPosition());
         telemetry.addLine("Winch Level: " + getLevel());
     }
 

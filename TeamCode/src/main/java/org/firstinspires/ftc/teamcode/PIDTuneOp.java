@@ -31,21 +31,48 @@ public class PIDTuneOp extends LinearOpMode {
     int systemSwap = 0;
     int pidIncrement = 0;
 
+    Mecanum drive;
+    Winch winch;
+
+    PIDFController pidController = new PIDFController(new PIDCoefficients(p, i, d), 0);
+
     @Override
     public void runOpMode() throws InterruptedException {
 
         waitForStart();
 
+        drive = new Mecanum(hardwareMap);
+        winch = new Winch(hardwareMap);
         while (opModeIsActive()) {
 
+            boolean change = false;
             //Subsystem Selector
             if (systemSwap == 0) {
                 if (gamepad1.left_bumper) {
                     currentOption = (int) Utilities.clip(currentOption - 1, options.length - 1, 0);
                     systemSwap++;
+                    change = true;
                 } else if (gamepad1.right_bumper) {
                     currentOption = (int) Utilities.clip(currentOption + 1, options.length - 1, 0);
                     systemSwap++;
+                    change = true;
+                }
+
+                if (change) {
+                    switch (options[currentOption]) {
+                        case MECANUMY:
+                            pidController = new PIDFController(Constants.MecanumConstants.yPID, 0);
+                            break;
+                        case MECANUMX:
+                            pidController = new PIDFController(Constants.MecanumConstants.xPID, 0);
+                            break;
+                        case MECANUMR:
+                            pidController = new PIDFController(Constants.MecanumConstants.yawPID, 0);
+                            break;
+                        case WINCH:
+                            pidController = new PIDFController(Constants.WinchConstants.winchPID, 0);
+                            break;
+                    }
                 }
 
             } else if (!gamepad1.left_bumper && !gamepad1.right_bumper) {
@@ -100,52 +127,56 @@ public class PIDTuneOp extends LinearOpMode {
                 pidIncrement = 0;
             }
 
+            if (gamepad1.b) {
+                pidController = new PIDFController(new PIDCoefficients(p, i, d), 0);
+            }
+
             if (gamepad1.a) {
-                PIDFController pid = new PIDFController(new PIDCoefficients(p, i, d), 0);
 
                 isRunning = true;
 
-                Mecanum drive = new Mecanum(hardwareMap);
-                Winch winch = new Winch(hardwareMap);
                 periodic();
 
                 switch (options[currentOption]) {
                     case MECANUMY:
-                        pid.setTargetPosition(15);
-                        while (Utilities.withinBounds(drive.getY(), pid.getTargetPosition(), 0.5)) {
+                        pidController.setTargetPosition(15);
+                        while (!Utilities.withinBounds(drive.getY(), pidController.getTargetPosition(), 0.5) && gamepad1.a) {
                             measurement = drive.getY();
-                            drive.drive(pid.update(drive.getY()), 0, 0, true);
+                            drive.drive(pidController.update(drive.getY()), 0, 0, true);
                             periodic();
                         }
                         break;
                     case MECANUMX:
-                        pid.setTargetPosition(15);
-                        while (Utilities.withinBounds(drive.getX(), pid.getTargetPosition(), 0.5)) {
+                        pidController.setTargetPosition(15);
+                        while (!Utilities.withinBounds(drive.getX(), pidController.getTargetPosition(), 0.5) && gamepad1.a) {
                             measurement = drive.getX();
-                            drive.drive(0, pid.update(drive.getX()), 0, true);
+                            drive.drive(0, pidController.update(drive.getX()), 0, true);
                             periodic();
                         }
                         break;
                     case MECANUMR:
-                        pid.setTargetPosition(30);
-                        while (Utilities.withinBounds(drive.getYaw(), pid.getTargetPosition(), 1.5)) {
+                        pidController.setTargetPosition(30);
+                        while (!Utilities.withinBounds(drive.getYaw(), pidController.getTargetPosition(), 1.5) && gamepad1.a) {
                             measurement = drive.getYaw();
-                            drive.drive(0, 0, pid.update(drive.getYaw()), true);
+                            drive.drive(0, 0, pidController.update(drive.getYaw()), true);
                             periodic();
                         }
                         break;
                     case WINCH:
-                        System.out.println("AA");
-                        pid.setTargetPosition(15);
-                        while (Utilities.withinBounds(winch.getPosition(), pid.getTargetPosition(), 1)) {
+                        pidController.setTargetPosition(1000);
+                        while (!Utilities.withinBounds(winch.getPosition(), pidController.getTargetPosition(), Constants.WinchConstants.tolerance)  && gamepad1.a) {
                             measurement = winch.getPosition();
-                            winch.setPower(pid.update(winch.getPosition()));
+                            winch.setPower(pidController.update(winch.getPosition()));
+                            telemetry.addData("update", pidController.update(winch.getPosition()));
                             periodic();
                         }
                         break;
                 }
 
             }
+
+            winch.setPower(0);
+            drive.drive(0,0,0,true);
 
             isRunning = false;
 
@@ -163,10 +194,7 @@ public class PIDTuneOp extends LinearOpMode {
         telemetry.addData("Setpoint ", setPoint);
         telemetry.addData("Measurement", measurement);
         telemetry.addData("Running ", isRunning);
-
-        telemetry.addData("pidswap ", pidSwap);
-        telemetry.addData("systemswap ", systemSwap);
-        telemetry.addData("pidincrement ", pidIncrement);
+        telemetry.addData("at setpoint", Utilities.withinBounds(winch.getPosition(), pidController.getTargetPosition(), 1));
 
         telemetry.update();
     }

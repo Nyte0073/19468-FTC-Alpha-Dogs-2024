@@ -33,62 +33,72 @@ public class MoveToPoint extends CommandBase {
 
     @Override
     public void initialize() {
+
+        if (firstRun) {
+            yPID = new PIDFController(Constants.MecanumConstants.yPID, 0);
+            xPID = new PIDFController(Constants.MecanumConstants.xPID, 0);
+            yawPID = new PIDFController(Constants.MecanumConstants.yawPID, 0);
+
+            yPID.setTargetPosition(targetPose.getY());
+            xPID.setTargetPosition(targetPose.getX());
+            yawPID.setTargetPosition(targetPose.getYaw());
+
+            yPID.reset();
+            xPID.reset();
+            yawPID.reset();
+
+            drive.setPose(new Pose2d(0,0, 0));
+
+            phase = 0;
+        }
+
         super.initialize();
-
-        yPID = new PIDFController(Constants.MecanumConstants.yPID, 0);
-        xPID = new PIDFController(Constants.MecanumConstants.xPID, 0);
-        yawPID = new PIDFController(Constants.MecanumConstants.yawPID, 0);
-
-        yPID.setTargetPosition(targetPose.getY());
-        xPID.setTargetPosition(targetPose.getX());
-        yawPID.setTargetPosition(targetPose.getYaw());
-
-        yPID.reset();
-        xPID.reset();
-        yawPID.reset();
-
-        phase = 0;
     }
 
     @Override
     public void execute() {
-        ySpeed = yPID.update(drive.getY());
-        xSpeed = xPID.update(drive.getX());
-        rotSpeed = yawPID.update(drive.getYaw());
+        while (onEnd()) {
+            ySpeed = yPID.update(drive.getY());
+            xSpeed = xPID.update(drive.getX());
+            rotSpeed = yawPID.update(drive.getYaw());
 
-        if (fast) {
-            switch (phase) {
-                case 0:
-                    drive.drive(0, 0, rotSpeed, true);
-                    phase += Utilities.withinBounds(drive.getYaw(), targetPose.getYaw(), 1) ? 1 : 0;
-                    break;
-                case 1:
-                    drive.drive(ySpeed, xSpeed, 0, true);
-                    phase += Utilities.withinBounds(drive.getX(), targetPose.getX(), 0.25) && Utilities.withinBounds(drive.getY(), targetPose.getY(), 0.25) ? 1 : 0;
-                    break;
-            }
-        } else {
-            switch (phase) {
-                case 0:
-                    drive.drive(0, 0, rotSpeed, true);
-                    phase += Utilities.withinBounds(drive.getYaw(), targetPose.getYaw(), 1) ? 1 : 0;
-                    break;
-                case 1:
-                    drive.drive(ySpeed, 0, 0, true);
-                    phase += Utilities.withinBounds(drive.getY(), targetPose.getY(), 0.25) ? 1 : 0;
-                    break;
-                case 2:
-                    drive.drive(0, xSpeed, 0, true);
-                    phase += Utilities.withinBounds(drive.getX(), targetPose.getX(), 0.25) ? 1 : 0;
-                    break;
+            if (fast) {
+                switch (phase) {
+                    case 0:
+                        drive.drive(0, 0, rotSpeed, true);
+                        phase += Utilities.withinBounds(drive.getYaw(), targetPose.getYaw(), 1) ? 1 : 0;
+                        break;
+                    case 1:
+                        drive.drive(ySpeed, xSpeed, 0, true);
+                        phase += Utilities.withinBounds(drive.getX(), targetPose.getX(), 0.25) && Utilities.withinBounds(drive.getY(), targetPose.getY(), 0.25) ? 1 : 0;
+                        break;
+                }
+            } else {
+                switch (phase) {
+                    case 0:
+                        drive.drive(0, 0, rotSpeed, true);
+                        phase += Utilities.withinBounds(drive.getYaw(), targetPose.getYaw(), 1) ? 1 : 0;
+                        break;
+                    case 1:
+                        drive.drive(ySpeed, 0, 0, true);
+                        phase += Utilities.withinBounds(drive.getY(), targetPose.getY(), 0.25) ? 1 : 0;
+                        break;
+                    case 2:
+                        drive.drive(0, xSpeed, 0, true);
+                        phase += Utilities.withinBounds(drive.getX(), targetPose.getX(), 0.25) ? 1 : 0;
+                        break;
+                }
             }
         }
 
+        if (onEnd()) {
+            firstRun = false;
+        }
     }
 
     @Override
     public boolean onEnd() {
-        return Pose2d.atPose(drive.getPose(), targetPose, 0.25, 1);
+        return Pose2d.atPose(drive.getPose(), targetPose, 2, 3);
     }
 
     public void updatePose(Pose2d newPose) {

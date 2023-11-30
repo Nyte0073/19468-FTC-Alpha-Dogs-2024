@@ -122,6 +122,16 @@ public class Vision {
         return getBestPiece().estimateAngleToObject(AngleUnit.DEGREES);
     }
 
+    public Pose2d getLocation() {
+        AprilTagPoseFtc ftcPose = getPose();
+
+        double y = ftcPose.y;
+        double x = ftcPose.x;
+        double r = ftcPose.yaw;
+
+        return new Pose2d(x, y, r);
+    }
+
     public void updatePieceDetection() {
         pieceProcessor.getFreshRecognitions();
     }

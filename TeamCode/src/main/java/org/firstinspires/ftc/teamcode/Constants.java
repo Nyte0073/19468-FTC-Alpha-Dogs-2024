@@ -35,9 +35,9 @@ public class Constants {
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
 
         public static final double ticksPerRev = 8192;
-        public static final double wheelRadius = 38 / 25.4; //38mm in inches
+        public static final double wheelD = 38 / 25.4; //38mm in inches
         public static final double gearRatio = 1;
-        public static final double ticksToInch = ticksPerRev / (2 * wheelRadius * Math.PI);
+        public static final double ticksToInch = (wheelD * Math.PI) / ticksPerRev;
 
         //TODO: get this
         public static double LATERAL_DISTANCE = 0; // in - distance between left and right
@@ -49,7 +49,7 @@ public class Constants {
 
         public static final String intakeMotor = "outerIntake0";
 
-        public static final DcMotor.Direction invert = DcMotor.Direction.REVERSE;
+        public static final DcMotor.Direction invert = DcMotor.Direction.FORWARD;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
     }
 
@@ -57,8 +57,9 @@ public class Constants {
 
         public static final String winch2 = "rightWinch2";
         public static final double encoderToInches = 1;
-        public static final PIDCoefficients pidCoefficients = new PIDCoefficients(0, 0, 0);
-        public static final DcMotor.Direction invert = DcMotor.Direction.FORWARD;
+        public static final PIDCoefficients winchPID = new PIDCoefficients(0.1, 0, 0);
+        public static final double tolerance = 25;
+        public static final DcMotor.Direction invert = DcMotor.Direction.REVERSE;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
     }
 
@@ -75,8 +76,8 @@ public class Constants {
         public static final String rightWristServo = "rightWrist2";
         public static final String wristWheel = "wristWheel0";
         public static final Servo.Direction rightInvert = Servo.Direction.FORWARD;
-        public static final CRServo.Direction wheelInvert = CRServo.Direction.FORWARD;
-        public static final double homeAngle = 50.0; //0
+        public static final CRServo.Direction wheelInvert = CRServo.Direction.REVERSE;
+        public static final double homeAngle = 52.3; //0
         public static final double midAngle = 23.8; //0
 
     }
@@ -90,10 +91,12 @@ public class Constants {
 
     public static final class ScoringConstants {
 
-        public static final double armLevel1 = 0.0;
-        public static final double armLevel2 = 0.0;
-        public static final double armLevel3 = 0.0;
+        public static final double armLevel1 = 1400.0;
+        public static final double armLevel2 = 1750;
+        public static final double armLevel3 = 2150;
         public static final double scoreAngle = 118.91; //0.2937
+
+        public static final double tagOffset = 0;
 
         public static final ArmConfig scoreLow = new ArmConfig(armLevel1, scoreAngle);
         public static final ArmConfig scoreMid = new ArmConfig(armLevel2, scoreAngle);
@@ -105,12 +108,11 @@ public class Constants {
      * The pose is based on red, x should be flipped for blue
      */
     public static final class AutoPoses {
-        public static final Pose2d parkClose = new Pose2d(0,0, 0);
-
+        public static final Pose2d parkClose = new Pose2d(-20,0, 0);
     }
 
     public enum WinchLevel {
-        LOW, MID, HIGH
+        HOME, LOW, MID, HIGH
     }
 
 }
