@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.Constants.VisionConstants;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Pose2d;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -51,6 +52,12 @@ public class Vision {
                 .setUseObjectTracker(true)
                 .setTrackerMaxOverlap((float) 0.2)
                 .setTrackerMinSize(16)
+                .setModelAssetName(VisionConstants.MODEL_ASSET)
+                .setModelLabels(VisionConstants.LABELS)
+                //.setIsModelTensorFlow2(true)
+                //.setIsModelQuantized(true)
+                //.setModelInputSize(300)
+                //.setModelAspectRatio(16.0 / 9.0)
                 .build();
 
         visionPortal = new VisionPortal.Builder()
@@ -58,7 +65,9 @@ public class Vision {
                 .addProcessor(pieceProcessor)
                 .setCamera(scoreCamera)
                 .setCameraResolution(new Size(640, 480))
+                .enableLiveView(true)
                 .build();
+
     }
 
     public boolean hasTag() {

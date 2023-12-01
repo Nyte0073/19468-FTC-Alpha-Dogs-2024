@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -54,12 +55,13 @@ public class Constants {
     }
 
     public static final class WinchConstants {
-
-        public static final String winch2 = "rightWinch2";
+        public static final String leftWinch1 = "leftWinch1";
+        public static final String rightWinch1 = "rightWinch1";
         public static final double encoderToInches = 1;
         public static final PIDCoefficients winchPID = new PIDCoefficients(0.1, 0, 0);
         public static final double tolerance = 25;
-        public static final DcMotor.Direction invert = DcMotor.Direction.REVERSE;
+        public static final DcMotor.Direction rightInvert = DcMotor.Direction.REVERSE;
+        public static final DcMotor.Direction leftInvert = DcMotor.Direction.FORWARD;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
     }
 
@@ -82,11 +84,25 @@ public class Constants {
 
     }
 
+    public static final class PlaneConstants {
+        public static final String launcher0 = "launcher0";
+
+        public static final double hold = 0;
+        public static final double release = 300;
+
+        public static final Servo.Direction inverted = Servo.Direction.FORWARD;
+    }
+
     public static final class VisionConstants {
 
         public static final String scoreCam = "scoreCam";
         public static final String intakeCam = "intakeCam";
 
+        public static final String MODEL_ASSET = "custom.tflite";
+
+        public static final String[] LABELS = {
+                "Custom"
+        };
     }
 
     public static final class ScoringConstants {

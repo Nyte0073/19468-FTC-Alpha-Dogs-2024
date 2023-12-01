@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Utilities;
 
 public class Winch {
 
-    DcMotor winchMotor2;
+    DcMotor leftWinchMotor1, rightWinchMotor1;
     PIDFController pidController;
 
     Constants.WinchLevel level = Constants.WinchLevel.LOW;
@@ -21,11 +21,14 @@ public class Winch {
     int levelSwap = 0;
 
     public Winch(HardwareMap hardwareMap) {
-        winchMotor2 = hardwareMap.get(DcMotor.class, WinchConstants.winch2);
+        leftWinchMotor1 = hardwareMap.get(DcMotor.class, WinchConstants.leftWinch1);
+        rightWinchMotor1 = hardwareMap.get(DcMotor.class, WinchConstants.rightWinch1);
 
-        motorConfig(winchMotor2);
+        motorConfig(leftWinchMotor1);
+        motorConfig(rightWinchMotor1);
 
-        winchMotor2.setDirection(WinchConstants.invert);
+        leftWinchMotor1.setDirection(WinchConstants.leftInvert);
+        rightWinchMotor1.setDirection(WinchConstants.rightInvert);
 
         pidController = new PIDFController(WinchConstants.winchPID, 0);
     }
@@ -78,16 +81,18 @@ public class Winch {
     }
 
     public void setPower(double power) {
-        winchMotor2.setPower(power);
+        leftWinchMotor1.setPower(power);
+        rightWinchMotor1.setPower(power);
     }
 
     public double getPower() {
-        return winchMotor2.getPower();
+        return (leftWinchMotor1.getPower() + rightWinchMotor1.getPower()) / 2;
+
     }
 
     //TODO: convert to inches
     public double getPosition() {
-        return winchMotor2.getCurrentPosition() * WinchConstants.encoderToInches;
+        return rightWinchMotor1.getCurrentPosition() * WinchConstants.encoderToInches;
     }
 
     public void setSetpoint(double position) {
