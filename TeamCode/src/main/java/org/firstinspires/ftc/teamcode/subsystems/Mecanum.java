@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.Constants.MecanumConstants;
+
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -8,16 +10,11 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Pose2d;
-
-import static org.firstinspires.ftc.teamcode.Constants.MecanumConstants;
 
 public class Mecanum {
 
     private DcMotor frontLeft0, frontRight1, backLeft2, backRight3;
     private IMU imu;
-
-    private Pose2d currentPose;
 
     public Mecanum(HardwareMap hardwareMap) {
 
@@ -39,12 +36,11 @@ public class Mecanum {
         imu = hardwareMap.get(IMU.class, "imu");
 
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
 
-        currentPose = new Pose2d(0,0,0);
     }
 
     public void teleop(Gamepad gamepad1) {
@@ -56,7 +52,7 @@ public class Mecanum {
             imu.resetYaw();
         }
 
-        drive(y, x * 1.1, rx, true);
+        drive(y, x * 1.1, rx, false);
     }
 
     public void drive(double ySpeed, double xSpeed, double rot, boolean fieldOriented) {
@@ -73,8 +69,8 @@ public class Mecanum {
         }
 
         double denominator = Math.max(Math.abs(ySpeed) + Math.abs(xSpeed) + Math.abs(rot), 1);
-        double frontLeftPower = (rotY + rotX + rot) / denominator;
-        double backLeftPower = (rotY - rotX + rot) / denominator;
+        double frontLeftPower = (rotY - rotX + rot) / denominator;
+        double backLeftPower = (rotY + rotX + rot) / denominator;
         double frontRightPower = (rotY + rotX - rot) / denominator;
         double backRightPower = (rotY - rotX - rot) / denominator;
 
@@ -82,10 +78,10 @@ public class Mecanum {
     }
 
     public void setPower(double frontLeft, double backLeft, double frontRight, double backRight) {
-        frontLeft0.setPower(frontLeft);
-        backLeft2.setPower(backLeft);
-        frontRight1.setPower(frontRight);
-        backRight3.setPower(backRight);
+        frontLeft0.setPower(frontLeft / 2);
+        backLeft2.setPower(backLeft / 2);
+        frontRight1.setPower(frontRight / 2);
+        backRight3.setPower(backRight / 2);
     }
 
     public double[] getPower() {
@@ -99,48 +95,40 @@ public class Mecanum {
         return power;
     }
 
-    public double getX() {
-        return backLeft2.getCurrentPosition() * MecanumConstants.ticksToInch;
+
+    public double getLeftDist() {
+        return (frontLeft0.getCurrentPosition() / 20.0) * MecanumConstants.ticksToInch;
     }
 
-    public double getRightPosition() {
-        return -frontRight1.getCurrentPosition() * MecanumConstants.ticksToInch;
+    public double getRightDist() {
+        return -(frontRight1.getCurrentPosition() / 20.0) * MecanumConstants.ticksToInch;
     }
 
-    public double getLeftPosition() {
-        return -frontLeft0.getCurrentPosition() * MecanumConstants.ticksToInch;
+    public double getAvgDist() {
+        return (getLeftDist() + getRightDist()) / 2;
     }
 
-    public double getY() {
-        return (getRightPosition() + getLeftPosition()) / 2;
-    }
     public double getYaw() {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
     }
 
-    public Pose2d getPose() {
-        return currentPose;
-    }
-    public void setPose(Pose2d newPose) {
-        currentPose.updatePose(newPose);
-    }
 
     public void periodic(Telemetry telemetry) {
         telemetry.addLine("Drive:");
-        telemetry.addLine("Front Left: " + getPower()[0]);
-        telemetry.addLine("Back Left: " + getPower()[1]);
-        telemetry.addLine("Front Right: " + getPower()[2]);
-        telemetry.addLine("Back Right: " + getPower()[3]);
+        telemetry.addData("Front Left:", getPower()[0]);
+        telemetry.addData("Back Left:", getPower()[1]);
+        telemetry.addData("Front Right:", getPower()[2]);
+        telemetry.addData("Back Right:", getPower()[3]);
         telemetry.addLine("Position:");
-        telemetry.addLine("Y: " + getPose().getY());
-        telemetry.addLine("X: " + getPose().getX());
-        telemetry.addLine("Yaw: " + getPose().getYaw());
-
-        setPose(new Pose2d(getX(), getY(), getYaw()));
+        telemetry.addData("Left:", getLeftDist());
+        telemetry.addData("Right:", getRightDist());
+        telemetry.addData("Distance:", getAvgDist());
+        telemetry.addData("Yaw:", getYaw());
     }
 
     /**
      * Standard motor config for all drivetrain motors
+     *
      * @param motor DcMotor to  configure
      * @return configured DcMotor
      */

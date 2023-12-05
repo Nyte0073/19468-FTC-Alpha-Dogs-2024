@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities;
@@ -37,10 +38,10 @@ public class Winch {
 
         //Winch levels
         if (gamepad2.dpad_up && levelSwap == 0) {
-            level = level == Constants.WinchLevel.HOME ? Constants.WinchLevel.LOW : (level == Constants.WinchLevel.LOW ? Constants.WinchLevel.MID : Constants.WinchLevel.HIGH);
+            level = level == Constants.WinchLevel.HOME ? Constants.WinchLevel.LOW : Constants.WinchLevel.MID;
             levelSwap++;
         } else if (gamepad2.dpad_down && levelSwap == 0) {
-            level = level == Constants.WinchLevel.HIGH ? Constants.WinchLevel.MID : (level == Constants.WinchLevel.MID ? Constants.WinchLevel.LOW : Constants.WinchLevel.HOME);
+            level = level == Constants.WinchLevel.MID ? Constants.WinchLevel.LOW : Constants.WinchLevel.HOME;
             levelSwap++;
         } else if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
             levelSwap = 0;
@@ -56,9 +57,6 @@ public class Winch {
                     break;
                 case MID:
                     setSetpoint(Constants.ScoringConstants.scoreMid.getArmExtension());
-                    break;
-                case HIGH:
-                    setSetpoint(Constants.ScoringConstants.scoreHigh.getArmExtension());
                     break;
             }
 

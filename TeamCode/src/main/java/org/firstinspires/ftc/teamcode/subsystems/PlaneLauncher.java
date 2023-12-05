@@ -50,8 +50,6 @@ public class PlaneLauncher {
             launcherSwap++;
         } else  if (!gamepad2.y && launcherSwap != 0) {
             launcherSwap = 0;
-        } else {
-            teleopAngle += gamepad2.right_trigger - gamepad2.left_trigger;
         }
 
         teleopAngle = Utilities.clip(teleopAngle, 300, 0);
@@ -61,6 +59,6 @@ public class PlaneLauncher {
 
     public void periodic(Telemetry telemetry) {
         telemetry.addLine("Plane:");
-        telemetry.addLine("Wrist Angle: " + getAngle());
+        telemetry.addLine("Plane Angle: " + getAngle());
     }
 }

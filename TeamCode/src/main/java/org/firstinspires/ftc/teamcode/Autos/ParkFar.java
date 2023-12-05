@@ -6,17 +6,15 @@
 //import com.qualcomm.robotcore.util.ElapsedTime;
 //
 //import org.firstinspires.ftc.teamcode.Constants;
-//import org.firstinspires.ftc.teamcode.PIDTuneOp;
 //import org.firstinspires.ftc.teamcode.Pose2d;
 //import org.firstinspires.ftc.teamcode.Utilities;
-//import org.firstinspires.ftc.teamcode.commands.MoveToPoint;
 //import org.firstinspires.ftc.teamcode.subsystems.Intake;
 //import org.firstinspires.ftc.teamcode.subsystems.Mecanum;
 //import org.firstinspires.ftc.teamcode.subsystems.Vision;
 //import org.firstinspires.ftc.teamcode.subsystems.Wrist;
 //
-//@Autonomous(name = Constants.OpModes.parkAuto, group = Constants.OpModes.linearOp)
-//public class Park extends LinearOpMode {
+//@Autonomous(name = Constants.OpModes.parkAutoF, group = Constants.OpModes.linearOp)
+//public class ParkFar extends LinearOpMode {
 //
 //    Mecanum s_Drivetrain;
 //    Vision s_Vision;
@@ -29,7 +27,7 @@
 //
 //    private ElapsedTime runtime = new ElapsedTime();
 //    PIDFController xPID = new PIDFController(Constants.MecanumConstants.xPID, 0);
-//    Pose2d parkPose = Constants.AutoPoses.RparkClose;
+//    Pose2d parkPose = Constants.AutoPoses.RparkFar;
 //
 //    @Override
 //    public void runOpMode() throws InterruptedException {
@@ -45,8 +43,8 @@
 //
 //        //TODO: test
 //        while (!gamepad1.a && !opModeIsActive()) {
-//            if (gamepad1.left_bumper) parkPose = Constants.AutoPoses.BparkClose; //Blue
-//            if (gamepad1.right_bumper) parkPose = Constants.AutoPoses.RparkClose; //Red
+//            if (gamepad1.left_bumper) parkPose = Constants.AutoPoses.BparkFar; //Blue
+//            if (gamepad1.right_bumper) parkPose = Constants.AutoPoses.RparkFar; //Red
 //
 //            periodic();
 //        }
@@ -59,14 +57,22 @@
 //
 //            switch (phase) {
 //                case 0:
-//                    xPID.setTargetPosition(parkPose.getX());
+//                    xPID.setTargetPosition(parkPose.getY());
 //                    phase++;
 //                    break;
 //                case 1:
+//                    s_Drivetrain.drive(Utilities.clip(xPID.update(s_Drivetrain.getY()), 0.2, -0.2), 0, 0, false);
+//                    phase += Utilities.withinBounds(s_Drivetrain.getY(), parkPose.getY(), 1.5) ? 1 : 0;
+//                    break;
+//                case 2:
+//                    xPID.setTargetPosition(parkPose.getX());
+//                    phase++;
+//                    break;
+//                case 3:
 //                    s_Drivetrain.drive(0, Utilities.clip(xPID.update(s_Drivetrain.getX()), 0.2, -0.2), 0, false);
 //                    phase += Utilities.withinBounds(s_Drivetrain.getX(), parkPose.getX(), 1.5) ? 1 : 0;
 //                    break;
-//                case 2:
+//                case 4:
 //                    s_Drivetrain.drive(0,0,0,false);
 //                    s_Wrist.setPower(-1);
 //                    s_Intake.setPower(-1);

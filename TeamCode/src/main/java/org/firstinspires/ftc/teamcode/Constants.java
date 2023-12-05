@@ -18,6 +18,7 @@ public class Constants {
         public static final String pidOp = "PID Tune";
 
         public static final String parkAuto = "Park";
+        public static final String parkAutoF = "Park FAR";
     }
 
     public static final class MecanumConstants {
@@ -27,12 +28,12 @@ public class Constants {
         public static final String backLeftMotor = "backLeft2";
         public static final String backRightMotor = "backRight3";
 
-        public static final PIDCoefficients yPID = new PIDCoefficients(0, 0, 0);
-        public static final PIDCoefficients xPID = new PIDCoefficients(0, 0, 0);
+        public static final PIDCoefficients yPID = new PIDCoefficients(0.8, 0, 0);
+        public static final PIDCoefficients xPID = new PIDCoefficients(0.8, 0, 0);
         public static final PIDCoefficients yawPID = new PIDCoefficients(0, 0, 0);
 
-        public static final DcMotor.Direction invertLeft = DcMotor.Direction.REVERSE;
-        public static final DcMotor.Direction invertRight = DcMotor.Direction.FORWARD;
+        public static final DcMotor.Direction invertLeft = DcMotor.Direction.FORWARD;
+        public static final DcMotor.Direction invertRight = DcMotor.Direction.REVERSE;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
 
         public static final double ticksPerRev = 8192;
@@ -60,8 +61,8 @@ public class Constants {
         public static final double encoderToInches = 1;
         public static final PIDCoefficients winchPID = new PIDCoefficients(0.1, 0, 0);
         public static final double tolerance = 25;
-        public static final DcMotor.Direction rightInvert = DcMotor.Direction.REVERSE;
-        public static final DcMotor.Direction leftInvert = DcMotor.Direction.FORWARD;
+        public static final DcMotor.Direction rightInvert = DcMotor.Direction.FORWARD;
+        public static final DcMotor.Direction leftInvert = DcMotor.Direction.REVERSE;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
     }
 
@@ -79,7 +80,7 @@ public class Constants {
         public static final String wristWheel = "wristWheel0";
         public static final Servo.Direction rightInvert = Servo.Direction.FORWARD;
         public static final CRServo.Direction wheelInvert = CRServo.Direction.REVERSE;
-        public static final double homeAngle = 52.3; //0
+        public static final double homeAngle = 56.0; //0
         public static final double midAngle = 23.8; //0
 
     }
@@ -87,48 +88,44 @@ public class Constants {
     public static final class PlaneConstants {
         public static final String launcher0 = "launcher0";
 
-        public static final double hold = 0;
-        public static final double release = 300;
+        public static final double hold = 75;
+        public static final double release = 0;
 
         public static final Servo.Direction inverted = Servo.Direction.FORWARD;
     }
 
     public static final class VisionConstants {
 
-        public static final String scoreCam = "scoreCam";
-        public static final String intakeCam = "intakeCam";
+        public static final String huskyLens = "huskylens";
 
-        public static final String MODEL_ASSET = "custom.tflite";
-
-        public static final String[] LABELS = {
-                "Custom"
-        };
+        public static final int readPeriod = 1;
     }
 
     public static final class ScoringConstants {
 
-        public static final double armLevel1 = 1400.0;
-        public static final double armLevel2 = 1750;
-        public static final double armLevel3 = 2150;
+        public static final double armLevel1 = 4000;
+        public static final double armLevel2 = 5100;
         public static final double scoreAngle = 118.91; //0.2937
 
         public static final double tagOffset = 0;
 
         public static final ArmConfig scoreLow = new ArmConfig(armLevel1, scoreAngle);
         public static final ArmConfig scoreMid = new ArmConfig(armLevel2, scoreAngle);
-        public static final ArmConfig scoreHigh = new ArmConfig(armLevel3, scoreAngle);
-
     }
 
     /**
      * The pose is based on red, x should be flipped for blue
      */
     public static final class AutoPoses {
-        public static final Pose2d parkClose = new Pose2d(-20,0, 0);
+        public static final Pose2d BparkClose = new Pose2d(-12,0, 0);
+        public static final Pose2d RparkClose = new Pose2d(12,0, 0);
+
+        public static final Pose2d BparkFar = new Pose2d(-30,10, 0);
+        public static final Pose2d RparkFar = new Pose2d(30,10, 0);
     }
 
     public enum WinchLevel {
-        HOME, LOW, MID, HIGH
+        HOME, LOW, MID
     }
 
 }

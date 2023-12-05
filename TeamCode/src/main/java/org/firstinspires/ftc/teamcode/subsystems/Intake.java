@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Utilities;
+
 import static org.firstinspires.ftc.teamcode.Constants.IntakeConstants;
 
 public class Intake {
@@ -22,7 +24,7 @@ public class Intake {
 
     public void teleop(Gamepad gamepad1) {
         double outtake = gamepad1.left_trigger;
-        double intake = gamepad1.right_trigger;
+        double intake = gamepad1.right_trigger /2;
 
         setPower(intake - outtake);
     }

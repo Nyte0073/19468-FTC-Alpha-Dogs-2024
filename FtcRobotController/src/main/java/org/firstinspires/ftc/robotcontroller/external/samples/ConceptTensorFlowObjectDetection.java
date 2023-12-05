@@ -31,6 +31,8 @@ package org.firstinspires.ftc.robotcontroller.external.samples;
 
 import static com.google.blocks.ftcrobotcontroller.util.CurrentGame.TFOD_MODEL_ASSET;
 
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodParameters.CurrentGame.LABELS;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -49,8 +51,8 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
 @Disabled
+@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
 public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -114,7 +116,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
             .setModelAssetName(TFOD_MODEL_ASSET)
             //.setModelFileName(TFOD_MODEL_FILE)
 
-            //.setModelLabels(LABELS)
+            .setModelLabels(LABELS)
             //.setIsModelTensorFlow2(true)
             //.setIsModelQuantized(true)
             //.setModelInputSize(300)
@@ -127,7 +129,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
         // Set the camera (webcam vs. built-in RC phone camera).
         if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+            builder.setCamera(hardwareMap.get(WebcamName.class, "intakeCam"));
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
