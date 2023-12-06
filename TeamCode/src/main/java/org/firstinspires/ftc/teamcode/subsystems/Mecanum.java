@@ -69,10 +69,10 @@ public class Mecanum {
         }
 
         double denominator = Math.max(Math.abs(ySpeed) + Math.abs(xSpeed) + Math.abs(rot), 1);
-        double frontLeftPower = (rotY - rotX + rot) / denominator;
-        double backLeftPower = (rotY + rotX + rot) / denominator;
-        double frontRightPower = (rotY + rotX - rot) / denominator;
-        double backRightPower = (rotY - rotX - rot) / denominator;
+        double frontLeftPower = (rotY + rotX + rot) / denominator;
+        double backLeftPower = (rotY - rotX + rot) / denominator;
+        double frontRightPower = (rotY - rotX - rot) / denominator;
+        double backRightPower = (rotY + rotX - rot) / denominator;
 
         setPower(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
     }
