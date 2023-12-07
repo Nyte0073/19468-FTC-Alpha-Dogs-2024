@@ -15,7 +15,6 @@ public class Vision {
     private HuskyLens huskyLens;
     private Deadline rateLimit;
 
-
     public Vision(HardwareMap hardwareMap) {
         huskyLens = hardwareMap.get(HuskyLens.class, VisionConstants.huskyLens);
         rateLimit = new Deadline(VisionConstants.readPeriod, TimeUnit.SECONDS);
@@ -44,12 +43,29 @@ public class Vision {
         return getBlocks().length > 0;
     }
 
+    public Position getPiecePosition() {
+        double segment = VisionConstants.width / 3;
+
+        if (getX() < segment) {
+            return Position.LEFT;
+        } else if (getX() > (segment * 2)) {
+            return Position.RIGHT;
+        } else {
+            return Position.MIDDLE;
+        }
+    }
+
     public void periodic(Telemetry telemetry) {
         telemetry.addData("Block count", getBlocks().length);
         telemetry.addData("Block ID", getID());
         telemetry.addData("Block X", getX());
         telemetry.addData("Block Y", getY());
+
+        telemetry.addData("Piece Position: ", getPiecePosition());
     }
 
+    enum Position {
+        LEFT, MIDDLE, RIGHT;
+    }
 
 }

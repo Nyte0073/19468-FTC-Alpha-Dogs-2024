@@ -16,8 +16,8 @@ public class Arm {
     PIDFController pidController;
 
     public Arm(HardwareMap hardwareMap) {
-        leftArmMotor0 = hardwareMap.get(DcMotor.class, WinchConstants.leftWinch1);
-        rightArmMotor1 = hardwareMap.get(DcMotor.class, WinchConstants.rightWinch1);
+        leftArmMotor0 = hardwareMap.get(DcMotor.class, WinchConstants.leftArm0);
+        rightArmMotor1 = hardwareMap.get(DcMotor.class, WinchConstants.rightArm1);
 
         motorConfig(leftArmMotor0);
         motorConfig(rightArmMotor1);
@@ -38,8 +38,8 @@ public class Arm {
     }
 
     public void setPower(double power) {
-        leftArmMotor0.setPower(power);
-        rightArmMotor1.setPower(power);
+            leftArmMotor0.setPower(power);
+            rightArmMotor1.setPower(power);
     }
 
     public double getPower() {
@@ -48,8 +48,8 @@ public class Arm {
     }
 
     //TODO: convert to inches
-    public double getPosition() {
-        return rightArmMotor1.getCurrentPosition() * WinchConstants.encoderToInches;
+    public double getAngle() {
+        return rightArmMotor1.getCurrentPosition() / WinchConstants.encoderToDeg;
     }
 
     public void setSetpoint(double position) {
@@ -57,17 +57,17 @@ public class Arm {
     }
 
     public boolean atSetpoint() {
-        return Utilities.withinBounds(getPosition(), pidController.getTargetPosition(), WinchConstants.tolerance);
+        return Utilities.withinBounds(getAngle(), pidController.getTargetPosition(), WinchConstants.tolerance);
     }
 
     public double getSetpointCalc() {
-        return pidController.update(getPosition());
+        return pidController.update(getAngle());
     }
 
     public void periodic(Telemetry telemetry) {
-        telemetry.addLine("Winch Motors");
-        telemetry.addLine("Winch Power: " + getPower());
-        telemetry.addData("Winch Position: ", getPosition());
+        telemetry.addLine("Arm Motors");
+        telemetry.addLine("Arm Power: " + getPower());
+        telemetry.addData("Arm Position: ", getAngle());
     }
 
     /**

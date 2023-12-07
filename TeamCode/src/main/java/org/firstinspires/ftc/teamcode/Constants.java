@@ -43,18 +43,22 @@ public class Constants {
 
     }
 
-    public static final class IntakeConstants {
+    public static final class ClawConstants {
 
-        public static final String intakeMotor = "outerIntake0";
+        public static final String leftClaw0 = "leftClaw0";
+        public static final String rightClaw2 = "rightClaw2";
 
-        public static final DcMotor.Direction invert = DcMotor.Direction.FORWARD;
-        public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
+        public static final Servo.Direction invertL = Servo.Direction.FORWARD;
+        public static final Servo.Direction invertR = Servo.Direction.REVERSE;
+
+        public static final double openAngle = 0;
+        public static final double closedAngle = 0;
     }
 
     public static final class WinchConstants {
-        public static final String leftWinch1 = "leftWinch1";
-        public static final String rightWinch1 = "rightWinch1";
-        public static final double encoderToInches = 1;
+        public static final String leftArm0 = "leftArm0";
+        public static final String rightArm1 = "rightArm1";
+        public static final double encoderToDeg = 683.0 / 180.0;
         public static final PIDCoefficients winchPID = new PIDCoefficients(0.1, 0, 0);
         public static final double tolerance = 25;
         public static final DcMotor.Direction rightInvert = DcMotor.Direction.FORWARD;
@@ -63,7 +67,7 @@ public class Constants {
     }
 
     public static final class ClimberConstants {
-        public static final String climber0 = "climberServo0";
+        public static final String climber0 = "climberServo4";
         public static final double homeAngle = 0;
 
         public static final Servo.Direction invert = Servo.Direction.FORWARD;
@@ -94,6 +98,8 @@ public class Constants {
         public static final String huskyLens = "huskylens";
 
         public static final int readPeriod = 1;
+
+        public static final int width = 240;
     }
 
     public static final class ScoringConstants {
@@ -117,10 +123,6 @@ public class Constants {
 
         public static final Pose2d BparkFar = new Pose2d(-30,10, 0);
         public static final Pose2d RparkFar = new Pose2d(30,10, 0);
-    }
-
-    public enum WinchLevel {
-        HOME, LOW, MID
     }
 
 }
