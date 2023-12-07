@@ -5,12 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Mecanum;
+import org.firstinspires.ftc.teamcode.subsystems.Vision;
 
 @TeleOp(name = Constants.OpModes.teleop, group = Constants.OpModes.linearOp)
 public class RobotTeleOp extends LinearOpMode {
 
     Mecanum s_Drivetrain;
-    //Vision s_Vision;
+    Vision s_Vision;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -20,7 +21,7 @@ public class RobotTeleOp extends LinearOpMode {
         telemetry.update();
 
         s_Drivetrain = new Mecanum(hardwareMap);
-        //s_Vision = new Vision(hardwareMap);
+        s_Vision = new Vision(hardwareMap);
 
         waitForStart();
         runtime.reset();
@@ -30,7 +31,7 @@ public class RobotTeleOp extends LinearOpMode {
 
 
             s_Drivetrain.periodic(telemetry);
-            //s_Vision.periodic(telemetry);
+            s_Vision.periodic(telemetry);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();

@@ -21,7 +21,7 @@ public class Vision {
         rateLimit = new Deadline(VisionConstants.readPeriod, TimeUnit.SECONDS);
         rateLimit.expire();
 
-        huskyLens.selectAlgorithm(HuskyLens.Algorithm.OBJECT_RECOGNITION);
+        huskyLens.selectAlgorithm(HuskyLens.Algorithm.OBJECT_TRACKING);
     }
 
     public HuskyLens.Block[] getBlocks() {

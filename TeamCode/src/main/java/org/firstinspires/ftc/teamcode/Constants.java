@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
-import com.acmerobotics.roadrunner.control.PIDFController;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.ArmConfig;
@@ -67,22 +63,21 @@ public class Constants {
     }
 
     public static final class ClimberConstants {
-        public static final String climber6 = "climberServo6";
-        public static final String climberMotor1 = "climberMotor1";
+        public static final String climber0 = "climberServo0";
+        public static final double homeAngle = 0;
 
-        public static final DcMotor.Direction invert = DcMotor.Direction.FORWARD;
-        public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
+        public static final Servo.Direction invert = Servo.Direction.FORWARD;
     }
 
     public static final class WristConstants {
 
+        public static final String leftWristServo = "leftWrist0";
         public static final String rightWristServo = "rightWrist2";
-        public static final String wristWheel = "wristWheel0";
-        public static final Servo.Direction rightInvert = Servo.Direction.FORWARD;
-        public static final CRServo.Direction wheelInvert = CRServo.Direction.REVERSE;
-        public static final double homeAngle = 56.0; //0
-        public static final double midAngle = 23.8; //0
 
+        public static final Servo.Direction leftInvert = Servo.Direction.REVERSE;
+        public static final Servo.Direction rightInvert = Servo.Direction.FORWARD;
+
+        public static final double homeAngle = 0; //0
     }
 
     public static final class PlaneConstants {

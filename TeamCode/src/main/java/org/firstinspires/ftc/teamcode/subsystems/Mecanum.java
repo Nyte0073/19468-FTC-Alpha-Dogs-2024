@@ -52,7 +52,7 @@ public class Mecanum {
             imu.resetYaw();
         }
 
-        drive(y, x * 1.1, rx, false);
+        drive(y, x * 1.1, rx, true);
     }
 
     public void drive(double ySpeed, double xSpeed, double rot, boolean fieldOriented) {
@@ -78,10 +78,10 @@ public class Mecanum {
     }
 
     public void setPower(double frontLeft, double backLeft, double frontRight, double backRight) {
-        frontLeft0.setPower(frontLeft / 2);
-        backLeft2.setPower(backLeft / 2);
-        frontRight1.setPower(frontRight / 2);
-        backRight3.setPower(backRight / 2);
+        frontLeft0.setPower(frontLeft);
+        backLeft2.setPower(backLeft);
+        frontRight1.setPower(frontRight);
+        backRight3.setPower(backRight);
     }
 
     public double[] getPower() {
