@@ -69,10 +69,10 @@ public class Claw {
     }
 
     public void periodic(Telemetry telemetry) {
-        telemetry.addLine("Wrist:");
-        telemetry.addLine("L Wrist Angle: " + getLeftAngle());
-        telemetry.addLine("R Wrist Angle: " + getRightAngle());
-        telemetry.addLine("L Wrist Pos: " + getLPos());
-        telemetry.addLine("R Wrist Pos: " + getRPos());
+        telemetry.addLine("Claw:");
+        telemetry.addLine("L Claw Angle: " + getLeftAngle());
+        telemetry.addLine("R Claw Angle: " + getRightAngle());
+        telemetry.addLine("L Claw Pos: " + getLPos());
+        telemetry.addLine("R Claw Pos: " + getRPos());
     }
 }
