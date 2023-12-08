@@ -123,6 +123,10 @@ public class Constants {
     public static final class AutoPoses {
         public static final Pose2d parkClose = new Pose2d(0,12, 0);
 
+        public static final double spikeY = 15;
+        public static final double leftSpike = -90;
+        public static final double rightSpike = 90;
+
         public static final Pose2d BparkFar = new Pose2d(-30,10, 0);
         public static final Pose2d RparkFar = new Pose2d(30,10, 0);
     }

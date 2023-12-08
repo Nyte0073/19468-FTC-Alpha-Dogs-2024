@@ -68,7 +68,7 @@ public class Vision {
         }
     }
 
-    enum Position {
+    public enum Position {
         LEFT, MIDDLE, RIGHT;
     }
 
