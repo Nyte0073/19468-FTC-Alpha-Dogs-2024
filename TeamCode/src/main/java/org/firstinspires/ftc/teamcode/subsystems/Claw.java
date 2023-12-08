@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.WristConstants;
-
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,8 +12,6 @@ public class Claw {
 
     Servo leftClaw0;
     Servo rightClaw2;
-
-    double teleopAngle = Constants.ClawConstants.closedAngle;
     int wristSwap = 0;
 
     public Claw(HardwareMap hardwareMap) {
@@ -24,6 +20,9 @@ public class Claw {
 
         leftClaw0.setDirection(Constants.ClawConstants.invertL);
         rightClaw2.setDirection(Constants.ClawConstants.invertR);
+
+        closeRClaw();
+        closeLClaw();
     }
 
     public double getLeftAngle() {
@@ -34,15 +33,18 @@ public class Claw {
         return (rightClaw2.getPosition() * 300);
     }
 
-    public void setAngle(double angle) {
-        rightClaw2.setPosition(angle / 300);
+    public void setLeftAngle(double angle) {
         leftClaw0.setPosition(angle / 300);
-        teleopAngle = angle;
+    }
+
+    public void setRightAngle(double angle) {
+        rightClaw2.setPosition(angle / 300);
     }
 
     public double getLPos() {
         return leftClaw0.getPosition();
     }
+
     public double getRPos() {
         return rightClaw2.getPosition();
     }
@@ -51,21 +53,45 @@ public class Claw {
         rightClaw2.setPosition(position);
     }
 
-    public void teleop(Gamepad gamepad2) {
+    public void teleop(Gamepad gamepad1, Gamepad gamepad2) {
 
-        teleopAngle += gamepad2.right_trigger - gamepad2.left_trigger;
+        if (wristSwap == 0) {
+            if (gamepad1.left_bumper && Utilities.withinBounds(getLeftAngle(), Constants.ClawConstants.openAngle, 1)) {
+                closeLClaw();
+                wristSwap++;
+            } else if (gamepad1.left_bumper) {
+                openLClaw();
+                wristSwap++;
+            }
 
-        teleopAngle = Utilities.clip(teleopAngle, 300, 0);
+            if (gamepad1.right_bumper && Utilities.withinBounds(getRightAngle(), Constants.ClawConstants.openAngle, 1)) {
+                closeRClaw();
+                wristSwap++;
+            } else if (gamepad1.right_bumper) {
+                openRClaw();
+                wristSwap++;
+            }
 
-        setAngle(teleopAngle);
+        } else {
+            wristSwap = 0;
+        }
+
     }
 
-    public void openClaw() {
-        setAngle(Constants.ClawConstants.openAngle);
+    public void openLClaw() {
+        setLeftAngle(Constants.ClawConstants.openAngle);
     }
 
-    public void closeClaw() {
-        setAngle(Constants.ClawConstants.closedAngle);
+    public void closeLClaw() {
+        setLeftAngle(Constants.ClawConstants.closedAngle);
+    }
+
+    public void openRClaw() {
+        setRightAngle(Constants.ClawConstants.openAngle);
+    }
+
+    public void closeRClaw() {
+        setRightAngle(Constants.ClawConstants.closedAngle);
     }
 
     public void periodic(Telemetry telemetry) {

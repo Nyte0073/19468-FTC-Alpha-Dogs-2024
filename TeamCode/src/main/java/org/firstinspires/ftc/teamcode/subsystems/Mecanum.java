@@ -97,11 +97,11 @@ public class Mecanum {
 
 
     public double getLeftDist() {
-        return (frontLeft0.getCurrentPosition() / 20.0) * MecanumConstants.ticksToInch;
+        return (frontLeft0.getCurrentPosition()) * MecanumConstants.ticksToInch;
     }
 
     public double getRightDist() {
-        return -(frontRight1.getCurrentPosition() / 20.0) * MecanumConstants.ticksToInch;
+        return -(frontRight1.getCurrentPosition()) * MecanumConstants.ticksToInch;
     }
 
     public double getAvgDist() {
@@ -110,6 +110,13 @@ public class Mecanum {
 
     public double getYaw() {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+    }
+
+    public void resetEncoders() {
+        motorConfig(frontLeft0);
+        motorConfig(frontRight1);
+        motorConfig(backLeft2);
+        motorConfig(backRight3);
     }
 
 

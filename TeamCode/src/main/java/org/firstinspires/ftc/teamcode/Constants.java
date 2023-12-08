@@ -37,7 +37,7 @@ public class Constants {
         public static final double gearRatio = 1;
         public static final double ticksToInch = (wheelD * Math.PI) / ticksPerRev;
 
-        //TODO: get this
+
         public static double LATERAL_DISTANCE = 0; // in - distance between left and right
         public static double FORWARD_OFFSET = 0; // in - distance between the forward center
 
@@ -52,13 +52,13 @@ public class Constants {
         public static final Servo.Direction invertR = Servo.Direction.REVERSE;
 
         public static final double openAngle = 0;
-        public static final double closedAngle = 0;
+        public static final double closedAngle = 42.5;
     }
 
     public static final class WinchConstants {
         public static final String leftArm0 = "leftArm0";
         public static final String rightArm1 = "rightArm1";
-        public static final double encoderToDeg = 683.0 / 180.0;
+        public static final double encoderToDeg = -660 / 180;
         public static final PIDCoefficients winchPID = new PIDCoefficients(0.1, 0, 0);
         public static final double tolerance = 25;
         public static final DcMotor.Direction rightInvert = DcMotor.Direction.FORWARD;
@@ -67,10 +67,11 @@ public class Constants {
     }
 
     public static final class ClimberConstants {
-        public static final String climber0 = "climberServo4";
-        public static final double homeAngle = 0;
-
-        public static final Servo.Direction invert = Servo.Direction.FORWARD;
+        public static final String climber4 = "climberServo4";
+        public static final double homeAngle = 300-200;
+        public static final double climb = 300;
+        public static final String winchMotor3 = "winchMotor3";
+        public static final Servo.Direction invert = Servo.Direction.REVERSE;
     }
 
     public static final class WristConstants {
@@ -81,7 +82,9 @@ public class Constants {
         public static final Servo.Direction leftInvert = Servo.Direction.REVERSE;
         public static final Servo.Direction rightInvert = Servo.Direction.FORWARD;
 
-        public static final double homeAngle = 0; //0
+        public static final double homeAngle = 178.91; //0
+        public static final double pickupAngle = 0; //0
+        public static final double scoreAngle = 125.83; //0
     }
 
     public static final class PlaneConstants {
@@ -118,8 +121,7 @@ public class Constants {
      * The pose is based on red, x should be flipped for blue
      */
     public static final class AutoPoses {
-        public static final Pose2d BparkClose = new Pose2d(-12,0, 0);
-        public static final Pose2d RparkClose = new Pose2d(12,0, 0);
+        public static final Pose2d parkClose = new Pose2d(0,12, 0);
 
         public static final Pose2d BparkFar = new Pose2d(-30,10, 0);
         public static final Pose2d RparkFar = new Pose2d(30,10, 0);

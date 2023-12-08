@@ -50,9 +50,15 @@ public class Wrist {
         rightWrist2.setPosition(position);
     }
 
-    public void teleop(Gamepad gamepad2) {
+    public void teleop(Gamepad gamepad1, Gamepad gamepad2) {
 
-        teleopAngle += gamepad2.right_trigger - gamepad2.left_trigger;
+        if (gamepad1.a) {
+            teleopAngle = WristConstants.homeAngle;
+        } else if (gamepad1.x) {
+            teleopAngle = WristConstants.pickupAngle;
+        } else if (gamepad1.b) {
+            teleopAngle = WristConstants.scoreAngle;
+        }
 
         teleopAngle = Utilities.clip(teleopAngle, 300, 0);
 

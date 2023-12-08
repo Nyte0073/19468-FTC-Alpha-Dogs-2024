@@ -56,12 +56,16 @@ public class Vision {
     }
 
     public void periodic(Telemetry telemetry) {
-        telemetry.addData("Block count", getBlocks().length);
-        telemetry.addData("Block ID", getID());
-        telemetry.addData("Block X", getX());
-        telemetry.addData("Block Y", getY());
+        try {
+            telemetry.addData("Block count", getBlocks().length);
+            telemetry.addData("Block ID", getID());
+            telemetry.addData("Block X", getX());
+            telemetry.addData("Block Y", getY());
 
-        telemetry.addData("Piece Position: ", getPiecePosition());
+            telemetry.addData("Piece Position: ", getPiecePosition());
+        } catch (Exception e) {
+            telemetry.addData(">>", "Vision Error");
+        }
     }
 
     enum Position {

@@ -28,7 +28,7 @@ public class Arm {
         pidController = new PIDFController(WinchConstants.winchPID, 0);
     }
 
-    public void teleop(Gamepad gamepad2) {
+    public void teleop(Gamepad gamepad1, Gamepad gamepad2) {
 
         //Manual
         double winchPower = -gamepad2.right_stick_y;
@@ -38,8 +38,11 @@ public class Arm {
     }
 
     public void setPower(double power) {
-            leftArmMotor0.setPower(power);
-            rightArmMotor1.setPower(power);
+        power = getAngle() < 0 && power > 0 ? 0 : (getAngle() > 180 && power < 0 ? 0 : power);
+
+        leftArmMotor0.setPower(power);
+        rightArmMotor1.setPower(power);
+
     }
 
     public double getPower() {
@@ -49,7 +52,7 @@ public class Arm {
 
     //TODO: convert to inches
     public double getAngle() {
-        return rightArmMotor1.getCurrentPosition() / WinchConstants.encoderToDeg;
+        return leftArmMotor0.getCurrentPosition() / WinchConstants.encoderToDeg;
     }
 
     public void setSetpoint(double position) {
