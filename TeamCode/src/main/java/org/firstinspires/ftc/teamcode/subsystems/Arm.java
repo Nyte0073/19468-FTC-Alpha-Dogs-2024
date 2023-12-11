@@ -38,7 +38,7 @@ public class Arm {
     }
 
     public void setPower(double power) {
-        power = getAngle() < 0 && power > 0 ? 0 : (getAngle() > 180 && power < 0 ? 0 : power);
+        power = getAngle() < WinchConstants.intakeSafety && power > 0 ? 0 : (getAngle() > WinchConstants.scoreSafety && power < 0 ? 0 : power);
 
         leftArmMotor0.setPower(power);
         rightArmMotor1.setPower(power);

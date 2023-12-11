@@ -58,7 +58,9 @@ public class Constants {
     public static final class WinchConstants {
         public static final String leftArm0 = "leftArm0";
         public static final String rightArm1 = "rightArm1";
-        public static final double encoderToDeg = -660 / 180;
+        public static final double encoderToDeg = 647 / 180;
+        public static final double scoreSafety = 1000;
+        public static final double intakeSafety = -1000;
         public static final PIDCoefficients winchPID = new PIDCoefficients(0.1, 0, 0);
         public static final double tolerance = 25;
         public static final DcMotor.Direction rightInvert = DcMotor.Direction.FORWARD;
