@@ -12,7 +12,8 @@ public class Claw {
 
     Servo leftClaw0;
     Servo rightClaw2;
-    int wristSwap = 0;
+    int leftC = 0;
+    int rightC = 0;
 
     public Claw(HardwareMap hardwareMap) {
         leftClaw0 = hardwareMap.get(Servo.class, Constants.ClawConstants.leftClaw0);
@@ -55,26 +56,39 @@ public class Claw {
 
     public void teleop(Gamepad gamepad1, Gamepad gamepad2) {
 
-        if (wristSwap == 0) {
-            if (gamepad1.left_bumper && Utilities.withinBounds(getLeftAngle(), Constants.ClawConstants.openAngle, 1)) {
+        if (leftC == 0) {
+            if (gamepad1.dpad_left && Utilities.withinBounds(getLeftAngle(), Constants.ClawConstants.openAngle, 1)) {
                 closeLClaw();
-                wristSwap++;
-            } else if (gamepad1.left_bumper) {
+                leftC++;
+            } else if (gamepad1.dpad_left) {
                 openLClaw();
-                wristSwap++;
+                leftC++;
             }
-
-            if (gamepad1.right_bumper && Utilities.withinBounds(getRightAngle(), Constants.ClawConstants.openAngle, 1)) {
-                closeRClaw();
-                wristSwap++;
-            } else if (gamepad1.right_bumper) {
-                openRClaw();
-                wristSwap++;
-            }
-
-        } else {
-            wristSwap = 0;
+        } else if (!gamepad1.dpad_left) {
+            leftC = 0;
         }
+
+        if (rightC == 0) {
+            if (gamepad1.dpad_right && Utilities.withinBounds(getRightAngle(), Constants.ClawConstants.openAngle, 1)) {
+                closeRClaw();
+                rightC++;
+            } else if (gamepad1.dpad_right) {
+                openRClaw();
+                rightC++;
+            }
+
+        } else if (!gamepad1.dpad_right) {
+            rightC = 0;
+        }
+
+        if (gamepad1.left_bumper) {
+            closeRClaw();
+            closeLClaw();
+        } else if (gamepad1.right_bumper) {
+            openRClaw();
+            openLClaw();
+        }
+
 
     }
 

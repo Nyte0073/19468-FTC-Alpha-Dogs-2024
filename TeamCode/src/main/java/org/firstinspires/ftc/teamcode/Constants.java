@@ -12,7 +12,7 @@ public class Constants {
         public static final String linearOp = "Linear Opmode";
         public static final String teleop = "Teleop";
         public static final String pidOp = "PID Tune";
-
+        public static final String spikeAuto = "Just Spike";
         public static final String parkAuto = "Park";
         public static final String parkAutoF = "Park FAR";
     }
@@ -26,7 +26,7 @@ public class Constants {
 
         public static final PIDCoefficients yPID = new PIDCoefficients(0.8, 0, 0);
         public static final PIDCoefficients xPID = new PIDCoefficients(0.8, 0, 0);
-        public static final PIDCoefficients yawPID = new PIDCoefficients(0, 0, 0);
+        public static final PIDCoefficients yawPID = new PIDCoefficients(0.4, 0, 0);
 
         public static final DcMotor.Direction invertLeft = DcMotor.Direction.FORWARD;
         public static final DcMotor.Direction invertRight = DcMotor.Direction.REVERSE;
@@ -35,7 +35,7 @@ public class Constants {
         public static final double ticksPerRev = 8192;
         public static final double wheelD = 38 / 25.4; //38mm in inches
         public static final double gearRatio = 1;
-        public static final double ticksToInch = (wheelD * Math.PI) / ticksPerRev;
+        public static final double ticksToInch = 1;//(wheelD * Math.PI) / ticksPerRev;
 
 
         public static double LATERAL_DISTANCE = 0; // in - distance between left and right
@@ -58,11 +58,15 @@ public class Constants {
     public static final class WinchConstants {
         public static final String leftArm0 = "leftArm0";
         public static final String rightArm1 = "rightArm1";
-        public static final double encoderToDeg = 647 / 180;
-        public static final double scoreSafety = 1000;
-        public static final double intakeSafety = -1000;
-        public static final PIDCoefficients winchPID = new PIDCoefficients(0.1, 0, 0);
-        public static final double tolerance = 25;
+        public static final double encoderToDeg = 965/180;
+        public static final double scoreSafety = 190;
+        public static final double intakeSafety = -15;
+        public static final double pickupAngle = 0; //0
+        public static final double scoreAngle = 175.5; //0
+        public static final double maxSpeed = 0.6;
+        public static final PIDCoefficients winchPID = new PIDCoefficients(0.013, 0, 0.001);
+        public static final double tolerance = 4;
+        public static final double wristTolerance = 12;
         public static final DcMotor.Direction rightInvert = DcMotor.Direction.FORWARD;
         public static final DcMotor.Direction leftInvert = DcMotor.Direction.REVERSE;
         public static final DcMotor.ZeroPowerBehavior neutralMode = DcMotor.ZeroPowerBehavior.BRAKE;
@@ -84,8 +88,8 @@ public class Constants {
         public static final Servo.Direction leftInvert = Servo.Direction.REVERSE;
         public static final Servo.Direction rightInvert = Servo.Direction.FORWARD;
 
-        public static final double homeAngle = 178.91; //0
-        public static final double pickupAngle = 0; //0
+        public static final double homeAngle = 200; //0
+        public static final double pickupAngle = 13.23; //0
         public static final double scoreAngle = 125.83; //0
     }
 
@@ -125,9 +129,10 @@ public class Constants {
     public static final class AutoPoses {
         public static final Pose2d parkClose = new Pose2d(0,12, 0);
 
-        public static final double spikeY = 15;
-        public static final double leftSpike = -90;
-        public static final double rightSpike = 90;
+        public static final double spikeY = 0.25;
+        public static final double midSpike = 0;
+        public static final double leftSpike = 60;
+        public static final double rightSpike = -leftSpike;
 
         public static final Pose2d BparkFar = new Pose2d(-30,10, 0);
         public static final Pose2d RparkFar = new Pose2d(30,10, 0);

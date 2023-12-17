@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Utilities;
 
 public class Mecanum {
 
@@ -46,13 +47,17 @@ public class Mecanum {
     public void teleop(Gamepad gamepad1) {
         double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
         double x = gamepad1.left_stick_x;
-        double rx = gamepad1.right_stick_x;
+        double rx = gamepad1.right_stick_x / 2;
 
         if (gamepad1.options) {
             imu.resetYaw();
         }
 
         drive(y, x * 1.1, rx, true);
+    }
+
+    public void resetGyro() {
+        imu.resetYaw();
     }
 
     public void drive(double ySpeed, double xSpeed, double rot, boolean fieldOriented) {
@@ -101,7 +106,7 @@ public class Mecanum {
     }
 
     public double getRightDist() {
-        return -(frontRight1.getCurrentPosition()) * MecanumConstants.ticksToInch;
+        return (frontRight1.getCurrentPosition()) * MecanumConstants.ticksToInch;
     }
 
     public double getAvgDist() {
@@ -119,6 +124,20 @@ public class Mecanum {
         motorConfig(backRight3);
     }
 
+    public void driveToPos(int dist) {
+        frontLeft0.setTargetPosition(dist);
+        frontRight1.setTargetPosition(dist);
+        backLeft2.setTargetPosition(dist);
+        backRight3.setTargetPosition(dist);
+        positionConfig();
+
+    }
+
+    public boolean atTarget() {
+        return Utilities.withinBounds(frontLeft0.getCurrentPosition(), frontLeft0.getTargetPosition(), 5) &&
+                Utilities.withinBounds(frontRight1.getCurrentPosition(), frontRight1.getTargetPosition(), 5);
+    }
+
 
     public void periodic(Telemetry telemetry) {
         telemetry.addLine("Drive:");
@@ -127,8 +146,8 @@ public class Mecanum {
         telemetry.addData("Front Right:", getPower()[2]);
         telemetry.addData("Back Right:", getPower()[3]);
         telemetry.addLine("Position:");
-        telemetry.addData("Left:", getLeftDist());
-        telemetry.addData("Right:", getRightDist());
+        telemetry.addData("Left:", frontLeft0.getCurrentPosition());
+        telemetry.addData("Right:", frontRight1.getCurrentPosition());
         telemetry.addData("Distance:", getAvgDist());
         telemetry.addData("Yaw:", getYaw());
     }
@@ -145,6 +164,14 @@ public class Mecanum {
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         return motor;
+    }
+
+    public void positionConfig() {
+        frontLeft0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
 
 }

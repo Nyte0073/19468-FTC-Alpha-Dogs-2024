@@ -8,12 +8,14 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities;
 
 public class Arm {
 
     DcMotor leftArmMotor0, rightArmMotor1;
     PIDFController pidController;
+    boolean PIDToggle = true;
 
     public Arm(HardwareMap hardwareMap) {
         leftArmMotor0 = hardwareMap.get(DcMotor.class, WinchConstants.leftArm0);
@@ -28,17 +30,20 @@ public class Arm {
         pidController = new PIDFController(WinchConstants.winchPID, 0);
     }
 
-    public void teleop(Gamepad gamepad1, Gamepad gamepad2) {
+    public void teleop(Gamepad gamepad1) {
 
-        //Manual
-        double winchPower = -gamepad2.right_stick_y;
-
-        setPower(winchPower);
+       if (gamepad1.x) {
+            setSetpoint(WinchConstants.pickupAngle); //Intake
+        } else if (gamepad1.b) {
+            setSetpoint(WinchConstants.scoreAngle); //Score
+        }
 
     }
 
     public void setPower(double power) {
         power = getAngle() < WinchConstants.intakeSafety && power > 0 ? 0 : (getAngle() > WinchConstants.scoreSafety && power < 0 ? 0 : power);
+
+        power = Utilities.clip(power, WinchConstants.maxSpeed, -WinchConstants.maxSpeed);
 
         leftArmMotor0.setPower(power);
         rightArmMotor1.setPower(power);
@@ -63,14 +68,29 @@ public class Arm {
         return Utilities.withinBounds(getAngle(), pidController.getTargetPosition(), WinchConstants.tolerance);
     }
 
+    public boolean atWSetpoint() {
+        return Utilities.withinBounds(getAngle(), pidController.getTargetPosition(), WinchConstants.wristTolerance);
+    }
     public double getSetpointCalc() {
-        return pidController.update(getAngle());
+        return -pidController.update(getAngle());
+    }
+
+    public void togglePID(boolean enable) {
+        PIDToggle = enable;
     }
 
     public void periodic(Telemetry telemetry) {
+        if (PIDToggle && !atSetpoint()) {
+            setPower(getSetpointCalc());
+        } else if (PIDToggle && atSetpoint()) {
+            setPower(0);
+        }
+
         telemetry.addLine("Arm Motors");
         telemetry.addLine("Arm Power: " + getPower());
         telemetry.addData("Arm Position: ", getAngle());
+        telemetry.addData("at setpoint", atSetpoint());
+        telemetry.addData("update", getSetpointCalc());
     }
 
     /**

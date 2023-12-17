@@ -44,14 +44,18 @@ public class Vision {
     }
 
     public Position getPiecePosition() {
-        double segment = VisionConstants.width / 3;
+        try {
+            double segment = VisionConstants.width / 9.0;
 
-        if (getX() < segment) {
+            if (getX() < segment) {
+                return Position.LEFT;
+            } else if (getX() > (segment * 7)) {
+                return Position.RIGHT;
+            } else {
+                return Position.MIDDLE;
+            }
+        } catch (Exception e) {
             return Position.LEFT;
-        } else if (getX() > (segment * 2)) {
-            return Position.RIGHT;
-        } else {
-            return Position.MIDDLE;
         }
     }
 

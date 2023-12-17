@@ -14,7 +14,7 @@ public class Wrist {
     Servo leftWrist0;
     Servo rightWrist2;
 
-    double teleopAngle = WristConstants.homeAngle;
+    double teleopAngle = WristConstants.pickupAngle;
     int wristSwap = 0;
 
     public Wrist(HardwareMap hardwareMap) {
@@ -50,14 +50,16 @@ public class Wrist {
         rightWrist2.setPosition(position);
     }
 
-    public void teleop(Gamepad gamepad1, Gamepad gamepad2) {
+    public void teleop(Gamepad gamepad1, Gamepad gamepad2, boolean armSetpoint) {
 
-        if (gamepad1.a) {
-            teleopAngle = WristConstants.homeAngle;
-        } else if (gamepad1.x) {
-            teleopAngle = WristConstants.pickupAngle;
+        if (gamepad1.x && armSetpoint) {
+            teleopAngle = WristConstants.pickupAngle; //Intake
         } else if (gamepad1.b) {
-            teleopAngle = WristConstants.scoreAngle;
+            teleopAngle = WristConstants.scoreAngle; //Score
+        } else if ((!armSetpoint && gamepad1.b || gamepad1.x) || gamepad1.a) {
+            teleopAngle = WristConstants.homeAngle; //Home
+        } else {
+            teleopAngle += gamepad2.right_trigger - gamepad2.left_trigger;
         }
 
         teleopAngle = Utilities.clip(teleopAngle, 300, 0);

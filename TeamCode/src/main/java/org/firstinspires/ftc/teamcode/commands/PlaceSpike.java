@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.commands;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
@@ -23,7 +24,6 @@ public class PlaceSpike extends CommandBase {
     ElapsedTime time = new ElapsedTime();
     Vision.Position spike = null;
 
-    PIDFController yPID = new PIDFController(Constants.MecanumConstants.yPID);
     PIDFController yawPID = new PIDFController(Constants.MecanumConstants.yawPID);
 
     public PlaceSpike(Mecanum drive, Arm arm, Wrist wrist, Claw claw, Vision vision) {
@@ -40,22 +40,41 @@ public class PlaceSpike extends CommandBase {
             time.reset();
             time.startTime();
             phase = 0;
-
         }
 
         super.initialize();
     }
 
     @Override
-    protected void execute() {
+    public void execute() {
         switch (phase) {
             case 0:
+                wrist.setAngle(Constants.WristConstants.pickupAngle);
                 spike = vision.getPiecePosition();
-                yPID.setTargetPosition(Constants.AutoPoses.spikeY);
+                phase += !(spike == null) && time.seconds() > 2 ? 1 : 0;
+                drive.resetGyro();
+                break;
+            case 1:
+                if (time.seconds() < 3) {
+                    spike = vision.getPiecePosition();
+                }
 
+                drive.driveToPos(980);
+
+                if (drive.atTarget()) {
+                    drive.setPower(0, 0, 0, 0);
+                } else {
+                    drive.setPower(0.2, 0.2, 0.2, 0.2);
+                }
+
+                phase += drive.atTarget() ? 1 : 0;
+                wrist.setAngle(Constants.WristConstants.pickupAngle);
+                break;
+            case 2:
+                drive.resetEncoders();
                 switch (spike) {
                     case MIDDLE:
-                        yawPID.setTargetPosition(0);
+                        yawPID.setTargetPosition(Constants.AutoPoses.midSpike);
                         break;
                     case RIGHT:
                         yawPID.setTargetPosition(Constants.AutoPoses.rightSpike);
@@ -64,28 +83,32 @@ public class PlaceSpike extends CommandBase {
                         yawPID.setTargetPosition(Constants.AutoPoses.leftSpike);
                         break;
                 }
+                drive.drive(0, 0, -Utilities.clip(yawPID.update(drive.getYaw()), 0.1, -0.1), false);
 
-                phase += !(spike == null) ? 1 : 0;
-                break;
-            case 1:
-                drive.drive(yPID.update(drive.getAvgDist()), 0, 0, true);
-                phase += Utilities.withinBounds(drive.getAvgDist(), yPID.getTargetPosition(), 1) ? 1 : 0;
-                break;
-            case 2:
-                drive.drive(0, 0, yawPID.update(drive.getYaw()), true);
                 phase += Utilities.withinBounds(drive.getYaw(), yawPID.getTargetPosition(), 1.5) ? 1 : 0;
                 break;
             case 3:
+                drive.drive(0, 0, 0, false);
                 wrist.setAngle(Constants.WristConstants.pickupAngle);
-                phase++;
+                phase += time.seconds() > 8 ? 1 : 0;
                 break;
             case 4:
                 claw.openLClaw();
-                phase++;
+                phase += time.seconds() > 9 ? 1 : 0;
                 break;
             case 5:
                 claw.closeLClaw();
                 wrist.setAngle(Constants.WristConstants.homeAngle);
+                phase++;
+                break;
+            case 6:
+                yawPID.setTargetPosition(0);
+                drive.drive(0, 0, -Utilities.clip(yawPID.update(drive.getYaw()), 0.1, -0.1), false);
+
+                phase += Utilities.withinBounds(drive.getYaw(), yawPID.getTargetPosition(), 1.5) ? 1 : 0;
+                break;
+            case 7:
+                drive.drive(0, 0, 0, false);
                 phase++;
                 break;
         }
@@ -93,6 +116,23 @@ public class PlaceSpike extends CommandBase {
 
     @Override
     public boolean onEnd() {
-        return phase == 6;
+        return phase == 8;
+    }
+
+    public Vision.Position getSpike() {
+        return spike;
+    }
+
+    public int getPhase() {
+        return phase;
+    }
+
+    public PIDFController getData() {
+        return yawPID;
+    }
+    public void periodic(Telemetry telemetry) {
+        telemetry.addData("phase ", getPhase());
+        telemetry.addData("Spike", getSpike());
+        telemetry.addData("yaw target", getData().getTargetPosition());
     }
 }
